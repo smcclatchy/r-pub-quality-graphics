@@ -5,6 +5,7 @@ exercises: 30
 questions:
 - "What are the limitations of bar charts?"
 - "What information do boxplots display?"
+- "How can I subset data ?"
 objectives:
 - "Load data from a URL."
 - "Describe the anatomy of a box plot."
@@ -20,13 +21,11 @@ source: Rmd
 
 
 ## Preliminaries
-Bar charts are useful for displaying count data, for example, but are often used to portray statistical information that they don't represent well. In this lesson we'll learn to ['Kick the bar chart habit'](http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2837.html) by creating box plots as an alternative to bar charts. This lesson uses data from a multi-system survey of mouse physiology in 8 inbred founder strains and 54 F1 hybrids of the Collaborative Cross. The study is described in [Lenarcic et al, 2012](http://www.genetics.org/content/190/2/413.full). For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/projects/CGDpheno3) at Mouse Phenome Database. 
+Bar charts are useful for displaying count data but are often used to portray statistical information that they don't represent well. In this lesson we'll learn to ['Kick the bar chart habit'](http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2837.html) by creating box plots as an alternative to bar charts. This lesson uses data from a multi-system survey of mouse physiology in 8 inbred founder strains and 54 F1 hybrids of the Collaborative Cross. The study is described in [Lenarcic et al, 2012](http://www.genetics.org/content/190/2/413.full). For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/projects/CGDpheno3) at Mouse Phenome Database. 
 
-#### Load packages and libraries
-Load the ggplot and scales libraries. You'll need to install the packages
-first if you haven't done so already. Install them from the Packages tab,
-or use the install.packages() command. Use double quotes around the package
-name.
+#### Load package and library
+Load the ggplot library. You'll need to install the packages
+first if you haven't done so already. Install them from the Packages tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
 
 
 ~~~
@@ -34,12 +33,14 @@ install.packages("ggplot2")
 ~~~
 {: .r}
 
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library in order to use the functions contained in the package.
+You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library in order to use the functions contained in the package.  
+
 
 ~~~
 library(ggplot2)
 ~~~
 {: .r}
+
 When you load a library you'll get a warning message indicating the R version in which the library was built. If it's different from the R version that you're running, you might occasionally run into problems depending on the library and the functions it contains. To find out what version of R you have, type
 
 
@@ -72,7 +73,8 @@ nickname       Single Candle
 The version of R is given as version.string, followed by the nickname for the version.
 
 #### Load data
-Load the data from this shortened URL. Mind the double quotes.
+Load the data from this shortened URL. Mind the double quotes.  
+
 
 ~~~
 cc_data <- read.csv(file = "http://bit.ly/CGDPheno3")
@@ -81,6 +83,7 @@ cc_data <- read.csv(file = "http://bit.ly/CGDPheno3")
 
 #### Explore data
 Explore the data variables. The first 4 columns contain strain, sex, and ID numbers. The remaining contain phenotype measurements with abbreviated names.
+
 
 ~~~
 names(cc_data)
@@ -225,6 +228,7 @@ table(cc_data$sex, cc_data$strain)
 
 How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
 
+
 ~~~
 head(cc_data)
 ~~~
@@ -279,7 +283,8 @@ head(cc_data)
 {: .output}
 
 ## Plotting with [ggplot](http://ggplot2.org/)
-Use the ggplot() function, which is found in the ggplot2 library. Quick reminder of ggplot syntax: ggplot(data, mapping) + layer(). Plot red blood cells by strain.
+Use the `ggplot()` function, which is found in the `ggplot2` library. The basic `ggplot()` syntax is: `ggplot(data, mapping) + layer()`. We will build a plot of red blood cells by strain in several steps, addressing many of the ways that you can fine-tune your plot to display exactly the information that you want in the way that you want to do so. 
+
 
 ~~~
 ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) + 
@@ -289,9 +294,10 @@ ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) +
 
 <img src="../fig/rmd-02-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
 
-In a boxplot, the upper whisker extends to the highest value within 1.5 * inter-quartile range (IQR, or distance between first and third quartiles) and the lower whisker extends to the lowest value within 1.5 * IQR of the hinge. Data beyond the end of the whiskers (outliers) are plotted as points.
+In a boxplot, the upper whisker extends to the highest value within 1.5 x inter-quartile range (IQR, or distance between first and third quartiles) and the lower whisker extends to the lowest value within 1.5 x IQR of the hinge. Data beyond the end of the whiskers (outliers) are plotted as points.
 
 It's difficult to distinguish the strain names on the x-axis, so flip the coordinates to place strain on the y-axis and red blood cells on the x-axis. 
+
 
 ~~~
 ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) + 
@@ -302,7 +308,8 @@ ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) +
 
 <img src="../fig/rmd-02-unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" style="display: block; margin: auto;" />
 
-Sort the strains by mean red blood cells. Do this by re-ordering strains within the mapping function aes(). Save the plot as a variable.
+Sort the strains by mean red blood cells. Do this by re-ordering strains within the mapping function `aes()`. Save the plot as a variable.
+
 
 ~~~
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
@@ -315,6 +322,7 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 
 Add a point indicating the mean RBC value for each strain. Add a statistical summary layer to do this. Specify the color, shape and size of the point marking the mean.
 
+
 ~~~
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
   geom_boxplot() + 
@@ -326,12 +334,11 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 <img src="../fig/rmd-02-unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" style="display: block; margin: auto;" />
 
 You should see a purple square indicating the mean red blood cell value for each strain. Is it the same as the median value for each strain?
-Notice that the mean value is sensitive to outliers, while the median value is not sensitive
-to outliers. 
-Find the boxplot for WSBCASTF1. Notice that a single data point with a value greater than 11.5
-pulls the mean value for this strain far over to the right.
+Notice that the mean value is sensitive to outliers, while the median value is not sensitive to outliers. 
+Find the boxplot for WSBCASTF1. Notice that a single data point with a value greater than 11.5 pulls the mean value for this strain far over to the right.
 
 Plot the data points over each boxplot. Since ggplot builds a plot layer by layer, the boxplot layer should come before the data points so as not to obscure them.
+
 
 ~~~
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
@@ -344,7 +351,8 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 
 <img src="../fig/rmd-02-unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" style="display: block; margin: auto;" />
 
-Color the data points by sex. Save the plot as a variable. To view the plot, type the name of the variable.
+  Color the data points by sex. Save the plot as a variable. To view the plot, type the name of the variable.  
+
 
 ~~~
 rbc_boxplot <- ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE),
@@ -359,7 +367,8 @@ rbc_boxplot
 
 <img src="../fig/rmd-02-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
 
-Add axis labels. Redefine the plot variable.
+  Add axis labels. Redefine the plot variable.  
+
 
 ~~~
 rbc_boxplot <- rbc_boxplot +
@@ -371,7 +380,8 @@ rbc_boxplot
 
 <img src="../fig/rmd-02-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
 
-Add a title. Redefine the plot variable.
+  Add a title. Redefine the plot variable.  
+
 
 ~~~
 rbc_boxplot <- rbc_boxplot + 
@@ -384,7 +394,8 @@ rbc_boxplot
 
 #### Subsetting data
 Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts.
-Include the parent strains of the F1s.
+Include the parent strains of the F1s.  
+
 
 ~~~
 subset.cc_data <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ",
@@ -392,7 +403,8 @@ subset.cc_data <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ",
 ~~~
 {: .r}
 
-Create boxplots from the subset. 
+  Create boxplots from the subset.  
+
 
 ~~~
 ggplot(data = subset.cc_data, mapping = aes(x = strain, y = RBC)) + 
@@ -403,6 +415,7 @@ ggplot(data = subset.cc_data, mapping = aes(x = strain, y = RBC)) +
 <img src="../fig/rmd-02-unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" />
 
 Order by mean RBC value as before. Save the plot as a variable.
+
 
 ~~~
 subset_boxplot <- ggplot(data = subset.cc_data,
@@ -415,10 +428,9 @@ subset_boxplot
 
 <img src="../fig/rmd-02-unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" />
 
-This time there's no need to flip the axes since the strain names are legible on the 
-x-axis. 
-Plot the data points by sex.The boxplots have already been drawn and saved in the variable
-subset_boxplot. Layer the data points on top of the boxplots.
+This time there's no need to flip the axes since the strain names are legible on the x-axis. 
+Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots.
+
 
 ~~~
 subset_boxplot <- subset_boxplot + 
@@ -431,6 +443,7 @@ subset_boxplot
 
 Add a purple square indicating the mean RBC value for each strain.
 
+
 ~~~
 subset_boxplot <- subset_boxplot + 
   stat_summary(fun.y = "mean", geom = "point", colour = "mediumpurple4", shape = 15, size = 2)
@@ -441,6 +454,7 @@ subset_boxplot
 <img src="../fig/rmd-02-unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" style="display: block; margin: auto;" />
 
 Add x and y axis labels.
+
 
 ~~~
 subset_boxplot <- subset_boxplot + 
@@ -454,6 +468,7 @@ subset_boxplot
 
 Add a title.
 
+
 ~~~
 subset_boxplot <- subset_boxplot + 
   ggtitle("Red Blood Cell Distribution by Strain")
@@ -463,7 +478,8 @@ subset_boxplot
 
 <img src="../fig/rmd-02-unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" />
 
-Output the plot to a PDF file. Set width and height. Turn off the output to pdf with the dev.off() command.
+Output the plot to a PDF file. Set width and height. Turn off the output to pdf with the `dev.off()` command.
+
 
 ~~~
 pdf("subset-boxplot.pdf", width= 8, height = 9)

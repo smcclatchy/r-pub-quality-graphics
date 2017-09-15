@@ -114,13 +114,13 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
   coord_flip()
 ```
 
-Add a point indicating the mean RBC value for each strain. Add a statistical summary layer to do this. Specify the color, shape and size of the point marking the mean.
+Add a point indicating the mean RBC value for each strain. Add a statistical summary layer to do this.
 
 ```{r fig.height=10, fig.width=10, warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
   geom_boxplot() + 
   coord_flip() + 
-  stat_summary(fun.y = "mean", geom = "point", colour = "mediumpurple4", shape = 15, size = 2)
+  stat_summary(fun.y = "mean", geom = "point")
 ```
 
 You should see a purple square indicating the mean red blood cell value for each strain. Is it the same as the median value for each strain?
@@ -134,7 +134,7 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
   geom_boxplot() + 
   geom_point() +
   coord_flip() + 
-  stat_summary(fun.y = "mean", geom = "point", colour = "mediumpurple4", shape = 15, size = 2)
+  stat_summary(fun.y = "mean", geom = "point")
 ```
 
   Color the data points by sex. Save the plot as a variable. To view the plot, type the name of the variable.  
@@ -145,7 +145,7 @@ rbc_boxplot <- ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN
   geom_boxplot() + 
   geom_point(aes(colour = sex)) +
   coord_flip() + 
-  stat_summary(fun.y = "mean", geom = "point", colour = "mediumpurple4", shape = 15, size = 2)
+  stat_summary(fun.y = "mean", geom = "point")
 rbc_boxplot
 ```
 
@@ -165,6 +165,21 @@ rbc_boxplot <- rbc_boxplot +
   ggtitle("Red Blood Cell Distribution by Strain")
 rbc_boxplot
 ```
+
+> ## Challenge 1
+> 1. Choose another phenotype to plot as boxplots by strain.
+> 2. Flip the coordinates if necessary to make strain names legible.
+> 3. Order boxplots by mean phenotype value.
+> 4. Add a point indicating the mean strain value. 
+> 5. Add data points over the boxplots (optional). 
+> 6. Add axis labels and a plot title.
+> > ## Solution to Challenge 1
+> > 1. For percent neutrophils: `ggplot(data = cc_data, mapping = aes(x = strain, y = pctNEUT)) + geom_boxplot()`
+> > 2. For percent neutrophils: `ggplot(data = cc_data, mapping = aes(x = strain, y = pctNEUT)) + geom_boxplot() + coord_flip()`
+> > 3. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + coord_flip()`
+> > 4. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
+> > 5. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
+> > 6. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")  + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
 
 #### Subsetting data
 Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts.
@@ -236,7 +251,7 @@ dev.off()
 
 Picture a set of bar charts indicating the mean and s.e.m. for each strain. Which plot communicates more information, a bar chart or a box plot?
 
-> Code Challenge: Choose another phenotype to plot as boxplots by strain. Order boxplots by mean phenotype value. Flip the coordinates if necessary to make strain names legible. Add a point indicating the mean strain value. Add data points over the boxplots. Add axis labels and a plot title.
+
 
 
 ## References

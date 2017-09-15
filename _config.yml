@@ -3,15 +3,15 @@
 #------------------------------------------------------------
 
 # Which carpentry is this ("swc", "dc", or "lc")?
-carpentry: "swc"
+carpentry: "cc"
 
 # Overall title for pages.
-title: "Lesson Title"
+title: "Publication Quality Graphics with R"
 
 # Contact.  This *must* include the protocol: if it's an email
 # address, it must look like "mailto:lessons@software-carpentry.org",
 # or if it's a URL, "https://gitter.im/username/ProjectName".
-contact: "mailto:lessons@software-carpentry.org"
+contact: "mailto:susan.mcclatchy@jax.org"
 
 #------------------------------------------------------------
 # Generic settings (should not need to change).

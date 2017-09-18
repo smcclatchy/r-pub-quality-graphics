@@ -155,7 +155,7 @@ table(cc_data$strain)
 ~~~
 {: .output}
 
-In most cases there are 10 mice of each strain, with some exceptions. Some strains only have only 5 mice, while others have as many as 21.  
+In most cases there are 10 mice of each strain, with some exceptions. Some strains have only 5 mice, while others have as many as 21.  
 How many mice of each strain by sex?
 
 
@@ -268,7 +268,7 @@ ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-first_plot-1.png" title="plot of chunk first_plot" alt="plot of chunk first_plot" style="display: block; margin: auto;" />
 
 In a boxplot, the upper whisker extends to the highest value within 1.5 x inter-quartile range (IQR, or distance between first and third quartiles) and the lower whisker extends to the lowest value within 1.5 x IQR of the hinge. Data beyond the end of the whiskers (outliers) are plotted as points.
 
@@ -288,7 +288,13 @@ summary(object = cc_data$RBC)
 ~~~
 {: .output}
 
-The median red blood cell count across all strains is 10.03 and the mean value is 10.0322524. If you wanted summary statistics for a specific strain, you could subset the data by specifying the strain name.
+The median red blood cell count across all strains is 10.03 and the mean value is 10.0322524. You can view the distribution of red blood cell values with a histogram.
+
+
+
+The histogram shows that the data are centered around the value of 10.03.  
+
+If you wanted summary statistics for a specific strain, you could subset the data by specifying the strain name.
 
 
 ~~~
@@ -316,9 +322,11 @@ ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-flip_coords-1.png" title="plot of chunk flip_coords" alt="plot of chunk flip_coords" style="display: block; margin: auto;" />
 
-Sort the strains by mean red blood cells. Do this by re-ordering strains within the mapping function `aes()`. Save the plot as a variable.
+Are you using the up arrow on your keyboard to retrieve the last command you entered, or are you re-typing everything anew? Typing leads to pain and suffering (and typos), so use the up arrow to repeat your last command and then edit it. We don't believe in unnecessary pain or suffering.
+
+Sort the strains by mean red blood cells. Do this by re-ordering strains within the mapping function `aes()`.
 
 
 ~~~
@@ -328,7 +336,7 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-reorder-1.png" title="plot of chunk reorder" alt="plot of chunk reorder" style="display: block; margin: auto;" />
 
 Add a point indicating the mean RBC value for each strain. Add a statistical summary layer to do this.
 
@@ -341,10 +349,12 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-mean_point-1.png" title="plot of chunk mean_point" alt="plot of chunk mean_point" style="display: block; margin: auto;" />
 
-You should see a purple square indicating the mean red blood cell value for each strain. Is it the same as the median value for each strain?
-Notice that the mean value is sensitive to outliers, while the median value is not sensitive to outliers. 
+You should see an extra point indicating the mean red blood cell value for each strain. Is it the same as the median value for each strain, which is indicated by a vertical bar?  
+
+Notice that the mean value is sensitive to outliers, while the median value is not sensitive to outliers.  
+
 Find the boxplot for WSBCASTF1. Notice that a single data point with a value greater than 11.5 pulls the mean value for this strain far over to the right.
 
 Plot the data points over each boxplot. Since ggplot builds a plot layer by layer, the boxplot layer should come before the data points so as not to obscure them.
@@ -359,7 +369,7 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-plot_points-1.png" title="plot of chunk plot_points" alt="plot of chunk plot_points" style="display: block; margin: auto;" />
 
   Color the data points by sex. Save the plot as a variable. To view the plot, type the name of the variable.  
 
@@ -375,7 +385,7 @@ rbc_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-color_points-1.png" title="plot of chunk color_points" alt="plot of chunk color_points" style="display: block; margin: auto;" />
 
   Add axis labels. Redefine the plot variable.  
 
@@ -388,7 +398,7 @@ rbc_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-labels-1.png" title="plot of chunk labels" alt="plot of chunk labels" style="display: block; margin: auto;" />
 
   Add a title. Redefine the plot variable.  
 
@@ -400,7 +410,7 @@ rbc_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-title-1.png" title="plot of chunk title" alt="plot of chunk title" style="display: block; margin: auto;" />
 
 > ## Challenge 1
 > 1. Choose another phenotype to plot as boxplots by strain.
@@ -416,6 +426,27 @@ rbc_boxplot
 > > 4. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
 > > 5. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
 > > 6. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")  + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
+> {: .solution}
+{: .challenge}
+
+
+> ## Challenge 2
+> Compare the following plots. The first is a bar chart, the second a boxplot.
+> 1. What information does the bar chart provide?
+> 2. What information does the bar chart convey well?
+> 3. What information does the bar chart fail to convey well?
+> 4. What information does the boxplot provide?
+> 5. What information does the boxplot convey well? 
+> 6. What information does the boxplot fail to convey well?
+> 
+> > ## Solution to Challenge 2
+> > 1. What information does the bar chart provide?
+> > 2. What information does the bar chart convey well?
+> > 3. What information does the boxplot provide?
+> > 4. What information does the boxplot convey well? 
+
+> {: .solution}
+{: .challenge}
 
 #### Subsetting data
 Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts.
@@ -423,7 +454,7 @@ Include the parent strains of the F1s.
 
 
 ~~~
-subset.cc_data <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ",
+cc_data_subset <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ",
                                       "A/J", "NODAF1", "NOD/ShiLtJ") == TRUE)
 ~~~
 {: .r}
@@ -432,18 +463,18 @@ subset.cc_data <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ",
 
 
 ~~~
-ggplot(data = subset.cc_data, mapping = aes(x = strain, y = RBC)) + 
+ggplot(data = cc_data_subset, mapping = aes(x = strain, y = RBC)) + 
   geom_boxplot()
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-plot_subset-1.png" title="plot of chunk plot_subset" alt="plot of chunk plot_subset" style="display: block; margin: auto;" />
 
 Order by mean RBC value as before. Save the plot as a variable.
 
 
 ~~~
-subset_boxplot <- ggplot(data = subset.cc_data,
+subset_boxplot <- ggplot(data = cc_data_subset,
                          mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE),
                                        y = RBC)) + 
   geom_boxplot()
@@ -451,7 +482,7 @@ subset_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-order_subset-1.png" title="plot of chunk order_subset" alt="plot of chunk order_subset" style="display: block; margin: auto;" />
 
 This time there's no need to flip the axes since the strain names are legible on the x-axis. 
 Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots.
@@ -464,7 +495,7 @@ subset_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-subset_by_sex-1.png" title="plot of chunk subset_by_sex" alt="plot of chunk subset_by_sex" style="display: block; margin: auto;" />
 
 Add a purple square indicating the mean RBC value for each strain.
 
@@ -476,7 +507,7 @@ subset_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-add_mean-1.png" title="plot of chunk add_mean" alt="plot of chunk add_mean" style="display: block; margin: auto;" />
 
 Add x and y axis labels.
 
@@ -489,7 +520,7 @@ subset_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-label_axes-1.png" title="plot of chunk label_axes" alt="plot of chunk label_axes" style="display: block; margin: auto;" />
 
 Add a title.
 
@@ -501,7 +532,7 @@ subset_boxplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-02-unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" style="display: block; margin: auto;" />
+<img src="../fig/rmd-02-title_subset-1.png" title="plot of chunk title_subset" alt="plot of chunk title_subset" style="display: block; margin: auto;" />
 
 Output the plot to a PDF file. Set width and height. Turn off the output to pdf with the `dev.off()` command.
 

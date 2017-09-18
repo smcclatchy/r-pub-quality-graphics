@@ -40,25 +40,25 @@ install.packages("ggplot2")
 
 You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library into R in order to use the functions contained in the package.  
 
-```{r}
+```{r load_library}
 library(ggplot2)
 ```
 
 #### Load and explore data
 Load the data from this shortened URL. Mind the double quotes.  
 
-```{r}
+```{r load_data}
 cc_data <- read.csv(file = "http://bit.ly/CGDPheno3")
 ```
 
 Explore the data variables. The first 4 columns contain strain, sex, and ID numbers. The remaining contain phenotype measurements with abbreviated names.
 
-```{r}
+```{r names}
 names(cc_data)
 ```
 
 How many mice? 
-```{r}
+```{r dim}
 dim(cc_data)
 ```
 
@@ -66,33 +66,33 @@ There are `r nrow(cc_data)` mice in rows, and `r ncol(cc_data)` columns containi
 
 How many mice of each sex? 
 
-```{r}
+```{r table1}
 table(cc_data$sex)
 ```
 
 How many mice of each strain? 
 
-```{r}
+```{r table2}
 table(cc_data$strain)
 ```
 
-In most cases there are `r modal(table(cc_data$strain))` mice of each strain, with some exceptions. Some strains only have only `r min(table(cc_data$strain))` mice, while others have as many as `r max(table(cc_data$strain))`.  
+In most cases there are `r modal(table(cc_data$strain))` mice of each strain, with some exceptions. Some strains have only `r min(table(cc_data$strain))` mice, while others have as many as `r max(table(cc_data$strain))`.  
 How many mice of each strain by sex?
 
-```{r}
+```{r table3}
 table(cc_data$sex, cc_data$strain)
 ```
 
 Most strains have `r modal(table(cc_data$sex, cc_data$strain))` mice of each sex, while some may have `r min(table(cc_data$sex, cc_data$strain))` or as many as `r max(table(cc_data$sex, cc_data$strain))` of one sex. How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
 
-```{r}
+```{r head}
 head(cc_data)
 ```
 
 ## Plotting with [ggplot](http://ggplot2.org/)
 Use the `ggplot()` function, which is found in the `ggplot2` library. The basic `ggplot()` syntax is: `ggplot(data, mapping) + layer()`. We will build a plot of red blood cells by strain in several steps, addressing many of the ways that you can fine-tune your plot to display exactly the information that you want in the way that you want to do so. 
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r first_plot, fig.height=10, fig.width=10, warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) + 
   geom_boxplot()
 ```
@@ -101,13 +101,21 @@ In a boxplot, the upper whisker extends to the highest value within 1.5 x inter-
 
 You can view summary statistical information about a phenotype, such as the first quartile, median, or third quartile values by using `summary()`.
 
-```{r}
+```{r summary1}
 summary(object = cc_data$RBC)
 ```
 
-The median red blood cell count across all strains is `r median(cc_data$RBC, na.rm=TRUE)` and the mean value is `r mean(cc_data$RBC, na.rm=TRUE)`. If you wanted summary statistics for a specific strain, you could subset the data by specifying the strain name.
+The median red blood cell count across all strains is `r median(cc_data$RBC, na.rm=TRUE)` and the mean value is `r mean(cc_data$RBC, na.rm=TRUE)`. You can view the distribution of red blood cell values with a histogram.
 
-```{r}
+```{r hist, include=FALSE}
+ggplot(data = cc_data, mapping = aes(x = RBC)) + geom_histogram()
+```
+
+The histogram shows that the data are centered around the value of `r median(cc_data$RBC, na.rm=TRUE)`.  
+
+If you wanted summary statistics for a specific strain, you could subset the data by specifying the strain name.
+
+```{r summary2}
 summary(cc_data$RBC[cc_data$strain=="NOD/ShiLtJ"])
 ```
 
@@ -115,15 +123,17 @@ We'll look at subsetting data more in a bit. Back to plotting.
 
 It's difficult to distinguish the strain names on the x-axis, so flip the coordinates to place strain on the y-axis and red blood cells on the x-axis. 
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r flip_coords, fig.height=10, fig.width=10, warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) + 
   geom_boxplot() + 
   coord_flip()
 ```
 
-Sort the strains by mean red blood cells. Do this by re-ordering strains within the mapping function `aes()`. Save the plot as a variable.
+Are you using the up arrow on your keyboard to retrieve the last command you entered, or are you re-typing everything anew? Typing leads to pain and suffering (and typos), so use the up arrow to repeat your last command and then edit it. We don't believe in unnecessary pain or suffering.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+Sort the strains by mean red blood cells. Do this by re-ordering strains within the mapping function `aes()`.
+
+```{r reorder, fig.height=10, fig.width=10, warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
   geom_boxplot() + 
   coord_flip()
@@ -131,20 +141,22 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 
 Add a point indicating the mean RBC value for each strain. Add a statistical summary layer to do this.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r mean_point, fig.height=10, fig.width=10, warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
   geom_boxplot() + 
   coord_flip() + 
   stat_summary(fun.y = "mean", geom = "point")
 ```
 
-You should see a purple square indicating the mean red blood cell value for each strain. Is it the same as the median value for each strain?
-Notice that the mean value is sensitive to outliers, while the median value is not sensitive to outliers. 
+You should see an extra point indicating the mean red blood cell value for each strain. Is it the same as the median value for each strain, which is indicated by a vertical bar?  
+
+Notice that the mean value is sensitive to outliers, while the median value is not sensitive to outliers.  
+
 Find the boxplot for WSBCASTF1. Notice that a single data point with a value greater than 11.5 pulls the mean value for this strain far over to the right.
 
 Plot the data points over each boxplot. Since ggplot builds a plot layer by layer, the boxplot layer should come before the data points so as not to obscure them.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r plot_points, fig.height=10, fig.width=10, warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE), y = RBC)) + 
   geom_boxplot() + 
   geom_point() +
@@ -154,7 +166,7 @@ ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.r
 
   Color the data points by sex. Save the plot as a variable. To view the plot, type the name of the variable.  
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r color_points, fig.height=10, fig.width=10, warning=FALSE}
 rbc_boxplot <- ggplot(data = cc_data, mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE),
                                                     y = RBC)) + 
   geom_boxplot() + 
@@ -166,7 +178,7 @@ rbc_boxplot
 
   Add axis labels. Redefine the plot variable.  
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r labels, fig.height=10, fig.width=10, warning=FALSE}
 rbc_boxplot <- rbc_boxplot +
   xlab("strain") + 
   ylab("red blood cell count (n/uL)")
@@ -175,7 +187,7 @@ rbc_boxplot
 
   Add a title. Redefine the plot variable.  
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r title, fig.height=10, fig.width=10, warning=FALSE}
 rbc_boxplot <- rbc_boxplot + 
   ggtitle("Red Blood Cell Distribution by Strain")
 rbc_boxplot
@@ -195,27 +207,52 @@ rbc_boxplot
 > > 4. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
 > > 5. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
 > > 6. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")  + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
+> {: .solution}
+{: .challenge}
+
+
+> ## Challenge 2
+> Compare the following plots. The first is a bar chart, the second a boxplot.
+> 1. What information does the bar chart provide?
+> 2. What information does the bar chart convey well?
+> 3. What information does the bar chart fail to convey well?
+> 4. What information does the boxplot provide?
+> 5. What information does the boxplot convey well? 
+> 6. What information does the boxplot fail to convey well?
+> ```{r challenge2, include=FALSE}
+> cc_data_subset <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ", "A/J", "NODAF1", "NOD/ShiLtJ") == TRUE)
+> ggplot(data = cc_data_subset, mapping = aes(x = strain, y = RBC)) + geom_col()
+> ggplot(data = cc_data_subset, mapping = aes(x = strain, y = RBC)) + geom_boxplot()
+> ```
+> > ## Solution to Challenge 2
+> > 1. What information does the bar chart provide?
+> > 2. What information does the bar chart convey well?
+> > 3. What information does the boxplot provide?
+> > 4. What information does the boxplot convey well? 
+
+> {: .solution}
+{: .challenge}
 
 #### Subsetting data
 Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts.
 Include the parent strains of the F1s.  
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
-subset.cc_data <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ",
+```{r subset, warning=FALSE}
+cc_data_subset <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ",
                                       "A/J", "NODAF1", "NOD/ShiLtJ") == TRUE)
 ```
 
   Create boxplots from the subset.  
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
-ggplot(data = subset.cc_data, mapping = aes(x = strain, y = RBC)) + 
+```{r plot_subset, fig.height=10, fig.width=10, warning=FALSE}
+ggplot(data = cc_data_subset, mapping = aes(x = strain, y = RBC)) + 
   geom_boxplot()
 ```
 
 Order by mean RBC value as before. Save the plot as a variable.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
-subset_boxplot <- ggplot(data = subset.cc_data,
+```{r order_subset, fig.height=10, fig.width=10, warning=FALSE}
+subset_boxplot <- ggplot(data = cc_data_subset,
                          mapping = aes(x = reorder(strain, RBC, FUN = "mean", na.rm = TRUE),
                                        y = RBC)) + 
   geom_boxplot()
@@ -225,7 +262,7 @@ subset_boxplot
 This time there's no need to flip the axes since the strain names are legible on the x-axis. 
 Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r subset_by_sex, fig.height=10, fig.width=10, warning=FALSE}
 subset_boxplot <- subset_boxplot + 
   geom_point(aes(colour = sex))
 subset_boxplot
@@ -233,7 +270,7 @@ subset_boxplot
 
 Add a purple square indicating the mean RBC value for each strain.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r add_mean, fig.height=10, fig.width=10, warning=FALSE}
 subset_boxplot <- subset_boxplot + 
   stat_summary(fun.y = "mean", geom = "point", colour = "mediumpurple4", shape = 15, size = 2)
 subset_boxplot
@@ -241,7 +278,7 @@ subset_boxplot
 
 Add x and y axis labels.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r label_axes, fig.height=10, fig.width=10, warning=FALSE}
 subset_boxplot <- subset_boxplot + 
   xlab("strain") + 
   ylab("red blood cell count (n/uL)")
@@ -250,7 +287,7 @@ subset_boxplot
 
 Add a title.
 
-```{r fig.height=10, fig.width=10, warning=FALSE}
+```{r title_subset, fig.height=10, fig.width=10, warning=FALSE}
 subset_boxplot <- subset_boxplot + 
   ggtitle("Red Blood Cell Distribution by Strain")
 subset_boxplot

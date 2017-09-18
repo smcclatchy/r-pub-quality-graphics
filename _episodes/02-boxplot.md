@@ -13,6 +13,8 @@ objectives:
 - "Order groups by mean value."
 - "Subset data."
 - "Describe some pitfalls of using bar charts to display or compare means."
+- "Specify dimensions and save a plot as a PDF or PNG file."
+
 keypoints:
 - ""
 source: Rmd
@@ -25,17 +27,8 @@ source: Rmd
 ## Preliminaries
 Bar charts are useful for displaying count data but are often used to portray statistical information that they don't represent well. In this lesson we'll learn to ['Kick the bar chart habit'](http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2837.html) by creating box plots as an alternative to bar charts. This lesson uses data from a multi-system survey of mouse physiology in 8 inbred founder strains and 54 F1 hybrids of the Collaborative Cross. The study is described in [Lenarcic et al, 2012](http://www.genetics.org/content/190/2/413.full). For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/projects/CGDpheno3) at Mouse Phenome Database. 
 
-#### Load package and library
-Load the ggplot library. You'll need to install the packages
-first if you haven't done so already. Install them from the `Packages` tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
-
-
-~~~
-install.packages("ggplot2")
-~~~
-{: .r}
-
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library into R in order to use the functions contained in the package.  
+#### Load the library
+Load the ggplot library into R in order to use the functions contained in the package.  
 
 
 ~~~
@@ -288,9 +281,29 @@ summary(object = cc_data$RBC)
 ~~~
 {: .output}
 
-The median red blood cell count across all strains is 10.03 and the mean value is 10.0322524. You can view the distribution of red blood cell values with a histogram.
+The median red blood cell count across all strains is 10.03 and the mean value is 10.03. You can view the distribution of red blood cell values with a histogram.
 
 
+~~~
+ggplot(data = cc_data, mapping = aes(x = RBC)) + geom_histogram()
+~~~
+{: .r}
+
+
+
+~~~
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+~~~
+{: .output}
+
+
+
+~~~
+Warning: Removed 16 rows containing non-finite values (stat_bin).
+~~~
+{: .error}
+
+<img src="../fig/rmd-02-hist-1.png" title="plot of chunk hist" alt="plot of chunk hist" style="display: block; margin: auto;" />
 
 The histogram shows that the data are centered around the value of 10.03.  
 
@@ -443,20 +456,7 @@ rbc_boxplot
 > 4. What information does the boxplot provide?
 > 5. What information does the boxplot convey well? 
 > 6. What information does the boxplot fail to convey well?
-> 
-> ~~~
-> Error in summarySE(cc_data_subset, "RBC", "strain", na.rm = TRUE): could not find function "summarySE"
-> ~~~
-> {: .error}
-> 
-> 
-> 
-> ~~~
-> Error in ggplot(subset_se, aes(x = strain, y = RBC)): object 'subset_se' not found
-> ~~~
-> {: .error}
-> 
-> <img src="../fig/rmd-02-challenge2-1.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" />
+> <img src="../fig/rmd-02-challenge2-1.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" /><img src="../fig/rmd-02-challenge2-2.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" />
 >
 > > ## Solution to Challenge 2
 > > 1. What information does the bar chart provide?
@@ -516,7 +516,7 @@ subset_boxplot
 
 <img src="../fig/rmd-02-subset_by_sex-1.png" title="plot of chunk subset_by_sex" alt="plot of chunk subset_by_sex" style="display: block; margin: auto;" />
 
-Add a purple square indicating the mean RBC value for each strain.
+Add a purple square indicating the mean RBC value for each strain. Specify shape and size of the point.
 
 
 ~~~
@@ -571,9 +571,70 @@ quartz_off_screen
 ~~~
 {: .output}
 
-Picture a set of bar charts indicating the mean and s.e.m. for each strain. Which plot communicates more information, a bar chart or a box plot?
-
-
+> ## Challenge 3
+>
+> 1. Choose another phenotype or subset of strains to create boxplots by strain.
+> 2. Order boxplots by mean phenotype value.
+> 3. Save the plot as a variable.
+> 4. Layer the data points on top of the boxplots and color them by sex.
+> 5. Add a point indicating the mean strain value. 
+> 6. Add axis labels and a plot title.
+> 7. Output plot as a `pdf()` or `png()` file, and specify dimensions.
+>
+> > ## Solution to Challenge 3
+> > 1. Create a new subset with `cc_data_subset <- subset(cc_data, strain %in% c("CASTB6F1", "B6CASTF1", "C57BL/6J", "WSBCASTF1", "NZO/HlLtJ", "NOD/ShiLtJ") == TRUE)` and plot percent neutrophils with `ggplot(data = cc_data_subset, mapping = aes(x = strain, y = pctNEUT)) + geom_boxplot()`
+> > 2. `ggplot(data = cc_data_subset, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot()`
+> > 3. `subset_boxplot <- ggplot(data = cc_data_subset, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot()`
+> > 4. `subset_boxplot <- subset_boxplot + geom_point(aes(colour = sex))`
+> > 5. `subset_boxplot <- subset_boxplot + stat_summary(fun.y = "mean", geom = "point")`
+> > 6. `subset_boxplot <- subset_boxplot + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
+> > 7.
+> > 
+> > 
+> > ~~~
+> > png("median-boxplot.png", width=10, height = 10)
+> > print(subset_boxplot)
+> > ~~~
+> > {: .r}
+> > 
+> > 
+> > 
+> > ~~~
+> > Warning: Removed 7 rows containing non-finite values (stat_boxplot).
+> > ~~~
+> > {: .error}
+> > 
+> > 
+> > 
+> > ~~~
+> > Warning: Removed 7 rows containing non-finite values (stat_summary).
+> > ~~~
+> > {: .error}
+> > 
+> > 
+> > 
+> > ~~~
+> > Warning: Removed 7 rows containing missing values (geom_point).
+> > ~~~
+> > {: .error}
+> > 
+> > 
+> > 
+> > ~~~
+> > dev.off()
+> > ~~~
+> > {: .r}
+> > 
+> > 
+> > 
+> > ~~~
+> > quartz_off_screen 
+> >                 2 
+> > ~~~
+> > {: .output}
+> >
+> {: .solution}
+{: .challenge}  
 
 
 ## References

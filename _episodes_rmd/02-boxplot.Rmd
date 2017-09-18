@@ -13,6 +13,8 @@ objectives:
 - "Order groups by mean value."
 - "Subset data."
 - "Describe some pitfalls of using bar charts to display or compare means."
+- "Specify dimensions and save a plot as a PDF or PNG file."
+
 keypoints:
 - ""
 source: Rmd
@@ -25,20 +27,56 @@ knitr_fig_path("02-")
 
 ```{r, include=FALSE}
 library(raster)
+## Summarizes data. Source: Cookbook for R by Winston Chang
+## http://www.cookbook-r.com/Manipulating_data/Summarizing_data/
+## Gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95%).
+##   data: a data frame.
+##   measurevar: the name of a column that contains the variable to be summariezed
+##   groupvars: a vector containing names of columns that contain grouping variables
+##   na.rm: a boolean that indicates whether to ignore NA's
+##   conf.interval: the percent range of the confidence interval (default is 95%)
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
+                      conf.interval=.95, .drop=TRUE) {
+    library(plyr)
+
+    # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=FALSE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+
+    # This does the summary. For each group's data frame, return a vector with
+    # N, mean, and sd
+    datac <- ddply(data, groupvars, .drop=.drop,
+      .fun = function(xx, col) {
+        c(N    = length2(xx[[col]], na.rm=na.rm),
+          mean = mean   (xx[[col]], na.rm=na.rm),
+          sd   = sd     (xx[[col]], na.rm=na.rm)
+        )
+      },
+      measurevar
+    )
+
+    # Rename the "mean" column    
+    datac <- rename(datac, c("mean" = measurevar))
+
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+
+    # Confidence interval multiplier for standard error
+    # Calculate t-statistic for confidence interval: 
+    # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+    datac$ci <- datac$se * ciMult
+
+    return(datac)
+}
 ```
 
 ## Preliminaries
 Bar charts are useful for displaying count data but are often used to portray statistical information that they don't represent well. In this lesson we'll learn to ['Kick the bar chart habit'](http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2837.html) by creating box plots as an alternative to bar charts. This lesson uses data from a multi-system survey of mouse physiology in 8 inbred founder strains and 54 F1 hybrids of the Collaborative Cross. The study is described in [Lenarcic et al, 2012](http://www.genetics.org/content/190/2/413.full). For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/projects/CGDpheno3) at Mouse Phenome Database. 
 
-#### Load package and library
-Load the ggplot library. You'll need to install the packages
-first if you haven't done so already. Install them from the `Packages` tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
-
-```{r eval = FALSE}
-install.packages("ggplot2")
-```
-
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library into R in order to use the functions contained in the package.  
+#### Load the library
+Load the ggplot library into R in order to use the functions contained in the package.  
 
 ```{r load_library}
 library(ggplot2)
@@ -105,13 +143,13 @@ You can view summary statistical information about a phenotype, such as the firs
 summary(object = cc_data$RBC)
 ```
 
-The median red blood cell count across all strains is `r median(cc_data$RBC, na.rm=TRUE)` and the mean value is `r mean(cc_data$RBC, na.rm=TRUE)`. You can view the distribution of red blood cell values with a histogram.
+The median red blood cell count across all strains is `r round(median(cc_data$RBC, na.rm=TRUE), digits=2)` and the mean value is `r round(mean(cc_data$RBC, na.rm=TRUE), digits=2)`. You can view the distribution of red blood cell values with a histogram.
 
-```{r hist, include=FALSE}
+```{r hist}
 ggplot(data = cc_data, mapping = aes(x = RBC)) + geom_histogram()
 ```
 
-The histogram shows that the data are centered around the value of `r median(cc_data$RBC, na.rm=TRUE)`.  
+The histogram shows that the data are centered around the value of `r round(median(cc_data$RBC, na.rm=TRUE), digits=2)`.  
 
 If you wanted summary statistics for a specific strain, you could subset the data by specifying the strain name.
 
@@ -275,7 +313,7 @@ subset_boxplot <- subset_boxplot +
 subset_boxplot
 ```
 
-Add a purple square indicating the mean RBC value for each strain.
+Add a purple square indicating the mean RBC value for each strain. Specify shape and size of the point.
 
 ```{r add_mean, fig.height=10, fig.width=10, warning=FALSE}
 subset_boxplot <- subset_boxplot + 
@@ -302,15 +340,39 @@ subset_boxplot
 
 Output the plot to a PDF file. Set width and height. Turn off the output to pdf with the `dev.off()` command.
 
-```{r warning=FALSE}
+```{r output_pdf, warning=FALSE}
 pdf("subset-boxplot.pdf", width= 8, height = 9)
 print(subset_boxplot)
 dev.off()
 ```
 
-Picture a set of bar charts indicating the mean and s.e.m. for each strain. Which plot communicates more information, a bar chart or a box plot?
-
-
+> ## Challenge 3
+>
+> 1. Choose another phenotype or subset of strains to create boxplots by strain.
+> 2. Order boxplots by mean phenotype value.
+> 3. Save the plot as a variable.
+> 4. Layer the data points on top of the boxplots and color them by sex.
+> 5. Add a point indicating the mean strain value. 
+> 6. Add axis labels and a plot title.
+> 7. Output plot as a `pdf()` or `png()` file, and specify dimensions.
+>
+> > ## Solution to Challenge 3
+> > 1. Create a new subset with `cc_data_subset <- subset(cc_data, strain %in% c("CASTB6F1", "B6CASTF1", "C57BL/6J", "WSBCASTF1", "NZO/HlLtJ", "NOD/ShiLtJ") == TRUE)` and plot percent neutrophils with `ggplot(data = cc_data_subset, mapping = aes(x = strain, y = pctNEUT)) + geom_boxplot()`
+> > 2. `ggplot(data = cc_data_subset, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot()`
+> > 3. `subset_boxplot <- ggplot(data = cc_data_subset, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot()`
+> > 4. `subset_boxplot <- subset_boxplot + geom_point(aes(colour = sex))`
+> > 5. `subset_boxplot <- subset_boxplot + stat_summary(fun.y = "mean", geom = "point")`
+> > 6. `subset_boxplot <- subset_boxplot + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
+> > 7.
+> > 
+> > ```{r} 
+> > png("subset-boxplot.png", width=10, height = 10)
+> > print(subset_boxplot)
+> > dev.off()
+> > ```
+> >
+> {: .solution}
+{: .challenge}  
 
 
 ## References

@@ -193,6 +193,8 @@ rbc_boxplot <- rbc_boxplot +
 rbc_boxplot
 ```
 
+
+
 > ## Challenge 1
 >
 > 1. Choose another phenotype to plot as boxplots by strain.
@@ -222,9 +224,10 @@ rbc_boxplot
 > 4. What information does the boxplot provide?
 > 5. What information does the boxplot convey well? 
 > 6. What information does the boxplot fail to convey well?
-> ```{r challenge2, echo=FALSE}
+> ```{r challenge2, fig.height=10, fig.width=10, echo=FALSE, warning=FALSE}
 > cc_data_subset <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ", "A/J", "NODAF1", "NOD/ShiLtJ") == TRUE)
-> ggplot(data = cc_data_subset, mapping = aes(x = strain, y = RBC)) + geom_col()
+> subset_se <- summarySE(cc_data_subset, "RBC", "strain", na.rm = TRUE)
+> ggplot(subset_se, aes(x=strain, y=RBC)) + geom_bar(position=position_dodge(), stat="identity") + geom_errorbar(aes(ymin=RBC-se, ymax=RBC+se), width=.2, position=position_dodge(.9))
 > ggplot(data = cc_data_subset, mapping = aes(x = strain, y = RBC)) + geom_boxplot()
 > ```
 >
@@ -235,13 +238,11 @@ rbc_boxplot
 > > 4. What information does the boxplot provide?
 > > 5. What information does the boxplot convey well? 
 > > 6. What information does the boxplot fail to convey well?
-
 > {: .solution}
 {: .challenge}
 
 #### Subsetting data
-Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts.
-Include the parent strains of the F1s.  
+Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts. Include the parental strains of the F1s.  
 
 ```{r subset, warning=FALSE}
 cc_data_subset <- subset(cc_data, strain %in% c("ACASTF1", "APWKF1", "CAST/EiJ", "PWK/PhJ",
@@ -266,7 +267,7 @@ subset_boxplot
 ```
 
 This time there's no need to flip the axes since the strain names are legible on the x-axis. 
-Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots.
+Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots and color them by sex.
 
 ```{r subset_by_sex, fig.height=10, fig.width=10, warning=FALSE}
 subset_boxplot <- subset_boxplot + 

@@ -412,6 +412,8 @@ rbc_boxplot
 
 <img src="../fig/rmd-02-title-1.png" title="plot of chunk title" alt="plot of chunk title" style="display: block; margin: auto;" />
 
+
+
 > ## Challenge 1
 >
 > 1. Choose another phenotype to plot as boxplots by strain.
@@ -443,18 +445,18 @@ rbc_boxplot
 > 6. What information does the boxplot fail to convey well?
 > 
 > ~~~
-> Warning: Removed 7 rows containing missing values (position_stack).
+> Error in summarySE(cc_data_subset, "RBC", "strain", na.rm = TRUE): could not find function "summarySE"
+> ~~~
+> {: .error}
+> 
+> 
+> 
+> ~~~
+> Error in ggplot(subset_se, aes(x = strain, y = RBC)): object 'subset_se' not found
 > ~~~
 > {: .error}
 > 
 > <img src="../fig/rmd-02-challenge2-1.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" />
-> 
-> ~~~
-> Warning: Removed 7 rows containing non-finite values (stat_boxplot).
-> ~~~
-> {: .error}
-> 
-> <img src="../fig/rmd-02-challenge2-2.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" />
 >
 > > ## Solution to Challenge 2
 > > 1. What information does the bar chart provide?
@@ -463,13 +465,11 @@ rbc_boxplot
 > > 4. What information does the boxplot provide?
 > > 5. What information does the boxplot convey well? 
 > > 6. What information does the boxplot fail to convey well?
-
 > {: .solution}
 {: .challenge}
 
 #### Subsetting data
-Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts.
-Include the parent strains of the F1s.  
+Select a subset of the strains. Choose strains with the highest and lowest mean and median red blood cell counts. Include the parental strains of the F1s.  
 
 
 ~~~
@@ -504,7 +504,7 @@ subset_boxplot
 <img src="../fig/rmd-02-order_subset-1.png" title="plot of chunk order_subset" alt="plot of chunk order_subset" style="display: block; margin: auto;" />
 
 This time there's no need to flip the axes since the strain names are legible on the x-axis. 
-Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots.
+Plot the data points by sex.The boxplots have already been drawn and saved in the variable `subset_boxplot`. Layer the data points on top of the boxplots and color them by sex.
 
 
 ~~~

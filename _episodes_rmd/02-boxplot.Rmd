@@ -145,7 +145,7 @@ summary(object = cc_data$RBC)
 
 The median red blood cell count across all strains is `r round(median(cc_data$RBC, na.rm=TRUE), digits=2)` and the mean value is `r round(mean(cc_data$RBC, na.rm=TRUE), digits=2)`. You can view the distribution of red blood cell values with a histogram.
 
-```{r hist}
+```{r hist, warning=FALSE, message=FALSE}
 ggplot(data = cc_data, mapping = aes(x = RBC)) + geom_histogram()
 ```
 
@@ -255,7 +255,7 @@ rbc_boxplot
 
 > ## Challenge 2
 >
-> Compare the following plots. The first is a bar chart, the second a boxplot.
+> Compare the following plots. The first is a bar chart, the second a boxplot. Both supply information about red blood cells in the same subset of strains.
 > 1. What information does the bar chart provide?
 > 2. What information does the bar chart convey well?
 > 3. What information does the bar chart fail to convey well?
@@ -365,7 +365,7 @@ dev.off()
 > > 6. `subset_boxplot <- subset_boxplot + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
 > > 7.
 > > 
-> > ```{r} 
+> > ```{r challenge3, warning=FALSE} 
 > > png("subset-boxplot.png", width=10, height = 10)
 > > print(subset_boxplot)
 > > dev.off()

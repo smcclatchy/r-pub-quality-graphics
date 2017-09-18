@@ -289,20 +289,6 @@ ggplot(data = cc_data, mapping = aes(x = RBC)) + geom_histogram()
 ~~~
 {: .r}
 
-
-
-~~~
-`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-~~~
-{: .output}
-
-
-
-~~~
-Warning: Removed 16 rows containing non-finite values (stat_bin).
-~~~
-{: .error}
-
 <img src="../fig/rmd-02-hist-1.png" title="plot of chunk hist" alt="plot of chunk hist" style="display: block; margin: auto;" />
 
 The histogram shows that the data are centered around the value of 10.03.  
@@ -449,7 +435,7 @@ rbc_boxplot
 
 > ## Challenge 2
 >
-> Compare the following plots. The first is a bar chart, the second a boxplot.
+> Compare the following plots. The first is a bar chart, the second a boxplot. Both supply information about red blood cells in the same subset of strains.
 > 1. What information does the bar chart provide?
 > 2. What information does the bar chart convey well?
 > 3. What information does the bar chart fail to convey well?
@@ -592,35 +578,8 @@ quartz_off_screen
 > > 
 > > 
 > > ~~~
-> > png("median-boxplot.png", width=10, height = 10)
+> > png("subset-boxplot.png", width=10, height = 10)
 > > print(subset_boxplot)
-> > ~~~
-> > {: .r}
-> > 
-> > 
-> > 
-> > ~~~
-> > Warning: Removed 7 rows containing non-finite values (stat_boxplot).
-> > ~~~
-> > {: .error}
-> > 
-> > 
-> > 
-> > ~~~
-> > Warning: Removed 7 rows containing non-finite values (stat_summary).
-> > ~~~
-> > {: .error}
-> > 
-> > 
-> > 
-> > ~~~
-> > Warning: Removed 7 rows containing missing values (geom_point).
-> > ~~~
-> > {: .error}
-> > 
-> > 
-> > 
-> > ~~~
 > > dev.off()
 > > ~~~
 > > {: .r}

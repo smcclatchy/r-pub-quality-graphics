@@ -62,7 +62,7 @@ How many mice?
 dim(cc_data)
 ```
 
-There are `r nrows(cc_data)` mice in rows, and `r ncol(cc_data)` columns containing strain, sex, ID numbers, and phenotypes.
+There are `r nrow(cc_data)` mice in rows, and `r ncol(cc_data)` columns containing strain, sex, ID numbers, and phenotypes.
 
 How many mice of each sex? 
 

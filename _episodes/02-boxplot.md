@@ -413,12 +413,14 @@ rbc_boxplot
 <img src="../fig/rmd-02-title-1.png" title="plot of chunk title" alt="plot of chunk title" style="display: block; margin: auto;" />
 
 > ## Challenge 1
+>
 > 1. Choose another phenotype to plot as boxplots by strain.
 > 2. Flip the coordinates if necessary to make strain names legible.
 > 3. Order boxplots by mean phenotype value.
 > 4. Add a point indicating the mean strain value. 
 > 5. Add data points over the boxplots (optional). 
 > 6. Add axis labels and a plot title.
+>
 > > ## Solution to Challenge 1
 > > 1. For percent neutrophils: `ggplot(data = cc_data, mapping = aes(x = strain, y = pctNEUT)) + geom_boxplot()`
 > > 2. For percent neutrophils: `ggplot(data = cc_data, mapping = aes(x = strain, y = pctNEUT)) + geom_boxplot() + coord_flip()`
@@ -427,10 +429,11 @@ rbc_boxplot
 > > 5. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")`
 > > 6. `ggplot(data = cc_data, mapping = aes(x = reorder(strain, pctNEUT, FUN = "mean", na.rm = TRUE), y = pctNEUT)) + geom_boxplot() + geom_point() + coord_flip() + stat_summary(fun.y = "mean", geom = "point")  + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
 > {: .solution}
-{: .challenge}
+{: .challenge}  
 
 
 > ## Challenge 2
+>
 > Compare the following plots. The first is a bar chart, the second a boxplot.
 > 1. What information does the bar chart provide?
 > 2. What information does the bar chart convey well?
@@ -439,11 +442,27 @@ rbc_boxplot
 > 5. What information does the boxplot convey well? 
 > 6. What information does the boxplot fail to convey well?
 > 
+> ~~~
+> Warning: Removed 7 rows containing missing values (position_stack).
+> ~~~
+> {: .error}
+> 
+> <img src="../fig/rmd-02-challenge2-1.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" />
+> 
+> ~~~
+> Warning: Removed 7 rows containing non-finite values (stat_boxplot).
+> ~~~
+> {: .error}
+> 
+> <img src="../fig/rmd-02-challenge2-2.png" title="plot of chunk challenge2" alt="plot of chunk challenge2" style="display: block; margin: auto;" />
+>
 > > ## Solution to Challenge 2
 > > 1. What information does the bar chart provide?
 > > 2. What information does the bar chart convey well?
-> > 3. What information does the boxplot provide?
-> > 4. What information does the boxplot convey well? 
+> > 3. What information does the bar chart fail to convey well?
+> > 4. What information does the boxplot provide?
+> > 5. What information does the boxplot convey well? 
+> > 6. What information does the boxplot fail to convey well?
 
 > {: .solution}
 {: .challenge}

@@ -84,8 +84,8 @@ str(sra)
 
 
 ~~~
-'data.frame':	3171 obs. of  5 variables:
- $ date             : Factor w/ 3171 levels "01/01/2011","01/01/2012",..: 1338 790 798 833 887 906 914 923 942 961 ...
+'data.frame':	3174 obs. of  5 variables:
+ $ date             : Factor w/ 3174 levels "01/01/2011","01/01/2012",..: 1338 790 798 833 887 906 914 923 942 961 ...
  $ bases            : num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
  $ open_access_bases: num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
  $ bytes            : num  5.05e+10 9.86e+10 1.03e+11 1.04e+11 1.04e+11 ...
@@ -93,7 +93,7 @@ str(sra)
 ~~~
 {: .output}
 
-The data have 3171 rows and 5 columns. The first column is listed as a factor when in fact it is a date in the MM/DD/YYYY format. A factor is a categorical variable (i.e. red, green, blue, or low, middle, and high-income). Date variables are a data type that includes month, day and year, and that have their own specific functions to extract weekdays or count the number of days until an event, for example. To place dates on the x-axis in proper order, convert the first column to a date object in the YYYY-MM-DD format. First check to make sure that the first several dates will be converted correctly.
+The data have 3174 rows and 5 columns. The first column is listed as a factor when in fact it is a date in the MM/DD/YYYY format. A factor is a categorical variable (i.e. red, green, blue, or low, middle, and high-income). Date variables are a data type that includes month, day and year, and that have their own specific functions to extract weekdays or count the number of days until an event, for example. To place dates on the x-axis in proper order, convert the first column to a date object in the YYYY-MM-DD format. First check to make sure that the first several dates will be converted correctly.
 
 
 ~~~
@@ -133,7 +133,7 @@ head(sra$date)
 
 ~~~
 [1] 06/05/2007 04/04/2008 04/05/2008 04/09/2008 04/15/2008 04/17/2008
-3171 Levels: 01/01/2011 01/01/2012 01/01/2013 01/01/2014 ... 12/31/2016
+3174 Levels: 01/01/2011 01/01/2012 01/01/2013 01/01/2014 ... 12/31/2016
 ~~~
 {: .output}
 
@@ -194,7 +194,7 @@ str(sra)
 
 
 ~~~
-'data.frame':	3171 obs. of  5 variables:
+'data.frame':	3174 obs. of  5 variables:
  $ date             : Date, format: "2007-06-05" "2008-04-04" ...
  $ bases            : num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
  $ open_access_bases: num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
@@ -278,7 +278,7 @@ max(sra$bases)
 
 
 ~~~
-[1] 1.318382e+16
+[1] 1.319109e+16
 ~~~
 {: .output}
 
@@ -292,12 +292,12 @@ max(sra$open_access_bases)
 
 
 ~~~
-[1] 5.422999e+15
+[1] 5.428109e+15
 ~~~
 {: .output}
 
 #### Log-transform the y-axis
-The smallest number of bases is 2.03e+10, and the largest number is 1.32e+16. The smallest number of open access bases is 2.03e+10, and the largest number is 5.42e+15. We need to transform the y axis to logarithmic for accurate display, so that the plot doesn't show values of zero that don't exist.
+The smallest number of bases is 2.03e+10, and the largest number is 1.32e+16. The smallest number of open access bases is 2.03e+10, and the largest number is 5.43e+15. We need to transform the y axis to logarithmic for accurate display, so that the plot doesn't show values of zero that don't exist.
 
 ~~~
 ggplot(data = sra, mapping = aes(x = date)) + 
@@ -352,7 +352,7 @@ table(format(sra$date, "%Y"))
 ~~~
 
 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
-   1  149  271  332  340  364  363  365  365  366  255 
+   1  149  271  332  340  364  363  365  365  366  258 
 ~~~
 {: .output}
 
@@ -385,7 +385,7 @@ table(format(sra$date, "%Y"))
 ~~~
 
 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
- 148  271  332  340  364  363  365  365  366  255 
+ 148  271  332  340  364  363  365  365  366  258 
 ~~~
 {: .output}
 

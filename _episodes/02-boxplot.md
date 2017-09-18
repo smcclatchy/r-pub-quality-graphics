@@ -20,12 +20,14 @@ source: Rmd
 
 
 
+
+
 ## Preliminaries
 Bar charts are useful for displaying count data but are often used to portray statistical information that they don't represent well. In this lesson we'll learn to ['Kick the bar chart habit'](http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2837.html) by creating box plots as an alternative to bar charts. This lesson uses data from a multi-system survey of mouse physiology in 8 inbred founder strains and 54 F1 hybrids of the Collaborative Cross. The study is described in [Lenarcic et al, 2012](http://www.genetics.org/content/190/2/413.full). For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/projects/CGDpheno3) at Mouse Phenome Database. 
 
 #### Load package and library
 Load the ggplot library. You'll need to install the packages
-first if you haven't done so already. Install them from the Packages tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
+first if you haven't done so already. Install them from the `Packages` tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
 
 
 ~~~
@@ -33,7 +35,7 @@ install.packages("ggplot2")
 ~~~
 {: .r}
 
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library in order to use the functions contained in the package.  
+You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library into R in order to use the functions contained in the package.  
 
 
 ~~~
@@ -41,38 +43,7 @@ library(ggplot2)
 ~~~
 {: .r}
 
-When you load a library you'll get a warning message indicating the R version in which the library was built. If it's different from the R version that you're running, you might occasionally run into problems depending on the library and the functions it contains. To find out what version of R you have, type
-
-
-~~~
-version
-~~~
-{: .r}
-
-
-
-~~~
-               _                           
-platform       x86_64-apple-darwin15.6.0   
-arch           x86_64                      
-os             darwin15.6.0                
-system         x86_64, darwin15.6.0        
-status                                     
-major          3                           
-minor          4.1                         
-year           2017                        
-month          06                          
-day            30                          
-svn rev        72865                       
-language       R                           
-version.string R version 3.4.1 (2017-06-30)
-nickname       Single Candle               
-~~~
-{: .output}
-
-The version of R is given as version.string, followed by the nickname for the version.
-
-#### Load data
+#### Load and explore data
 Load the data from this shortened URL. Mind the double quotes.  
 
 
@@ -81,7 +52,6 @@ cc_data <- read.csv(file = "http://bit.ly/CGDPheno3")
 ~~~
 {: .r}
 
-#### Explore data
 Explore the data variables. The first 4 columns contain strain, sex, and ID numbers. The remaining contain phenotype measurements with abbreviated names.
 
 
@@ -129,7 +99,10 @@ dim(cc_data)
 ~~~
 {: .output}
 
+There are `nrows(cc_data)` mice in rows, and `ncol(cc_data)` columns containing strain, sex, ID numbers, and phenotypes.
+
 How many mice of each sex? 
+
 
 ~~~
 table(cc_data$sex)
@@ -146,6 +119,7 @@ table(cc_data$sex)
 {: .output}
 
 How many mice of each strain? 
+
 
 ~~~
 table(cc_data$strain)
@@ -181,7 +155,9 @@ table(cc_data$strain)
 ~~~
 {: .output}
 
-How many mice of each strain by sex? 
+In most cases there are `modal(table(cc_data$strain))` mice of each strain, with some exceptions. Some strains only have only `min(table(cc_data$strain))` mice, while others have as many as `max(table(cc_data$strain))`.  
+How many mice of each strain by sex?
+
 
 ~~~
 table(cc_data$sex, cc_data$strain)
@@ -226,7 +202,7 @@ table(cc_data$sex, cc_data$strain)
 ~~~
 {: .output}
 
-How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
+Most strains have `modal(table(cc_data$sex, cc_data$strain))` mice of each sex, while some may have `min(table(cc_data$sex, cc_data$strain))` or as many as `max(table(cc_data$sex, cc_data$strain))` of one sex. How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
 
 
 ~~~

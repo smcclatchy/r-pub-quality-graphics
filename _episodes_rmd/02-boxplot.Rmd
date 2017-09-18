@@ -23,39 +23,34 @@ source("../bin/chunk-options.R")
 knitr_fig_path("02-")
 ```
 
+```{r, include=FALSE}
+library(raster)
+```
+
 ## Preliminaries
 Bar charts are useful for displaying count data but are often used to portray statistical information that they don't represent well. In this lesson we'll learn to ['Kick the bar chart habit'](http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2837.html) by creating box plots as an alternative to bar charts. This lesson uses data from a multi-system survey of mouse physiology in 8 inbred founder strains and 54 F1 hybrids of the Collaborative Cross. The study is described in [Lenarcic et al, 2012](http://www.genetics.org/content/190/2/413.full). For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/projects/CGDpheno3) at Mouse Phenome Database. 
 
 #### Load package and library
 Load the ggplot library. You'll need to install the packages
-first if you haven't done so already. Install them from the Packages tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
+first if you haven't done so already. Install them from the `Packages` tab in RStudio, or use the `install.packages()` command in the Console. Use double quotes around the package name.
 
 ```{r eval = FALSE}
 install.packages("ggplot2")
 ```
 
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library in order to use the functions contained in the package.  
+You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library into R in order to use the functions contained in the package.  
 
 ```{r}
 library(ggplot2)
 ```
 
-When you load a library you'll get a warning message indicating the R version in which the library was built. If it's different from the R version that you're running, you might occasionally run into problems depending on the library and the functions it contains. To find out what version of R you have, type
-
-```{r}
-version
-```
-
-The version of R is given as version.string, followed by the nickname for the version.
-
-#### Load data
+#### Load and explore data
 Load the data from this shortened URL. Mind the double quotes.  
 
 ```{r}
 cc_data <- read.csv(file = "http://bit.ly/CGDPheno3")
 ```
 
-#### Explore data
 Explore the data variables. The first 4 columns contain strain, sex, and ID numbers. The remaining contain phenotype measurements with abbreviated names.
 
 ```{r}
@@ -67,22 +62,28 @@ How many mice?
 dim(cc_data)
 ```
 
+There are `nrows(cc_data)` mice in rows, and `ncol(cc_data)` columns containing strain, sex, ID numbers, and phenotypes.
+
 How many mice of each sex? 
+
 ```{r}
 table(cc_data$sex)
 ```
 
 How many mice of each strain? 
+
 ```{r}
 table(cc_data$strain)
 ```
 
-How many mice of each strain by sex? 
+In most cases there are `modal(table(cc_data$strain))` mice of each strain, with some exceptions. Some strains only have only `min(table(cc_data$strain))` mice, while others have as many as `max(table(cc_data$strain))`.  
+How many mice of each strain by sex?
+
 ```{r}
 table(cc_data$sex, cc_data$strain)
 ```
 
-How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
+Most strains have `modal(table(cc_data$sex, cc_data$strain))` mice of each sex, while some may have `min(table(cc_data$sex, cc_data$strain))` or as many as `max(table(cc_data$sex, cc_data$strain))` of one sex. How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
 
 ```{r}
 head(cc_data)

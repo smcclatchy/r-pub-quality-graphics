@@ -62,7 +62,7 @@ How many mice?
 dim(cc_data)
 ```
 
-There are `nrows(cc_data)` mice in rows, and `ncol(cc_data)` columns containing strain, sex, ID numbers, and phenotypes.
+There are `r nrows(cc_data)` mice in rows, and `r ncol(cc_data)` columns containing strain, sex, ID numbers, and phenotypes.
 
 How many mice of each sex? 
 
@@ -76,14 +76,14 @@ How many mice of each strain?
 table(cc_data$strain)
 ```
 
-In most cases there are `modal(table(cc_data$strain))` mice of each strain, with some exceptions. Some strains only have only `min(table(cc_data$strain))` mice, while others have as many as `max(table(cc_data$strain))`.  
+In most cases there are `r modal(table(cc_data$strain))` mice of each strain, with some exceptions. Some strains only have only `r min(table(cc_data$strain))` mice, while others have as many as `r max(table(cc_data$strain))`.  
 How many mice of each strain by sex?
 
 ```{r}
 table(cc_data$sex, cc_data$strain)
 ```
 
-Most strains have `modal(table(cc_data$sex, cc_data$strain))` mice of each sex, while some may have `min(table(cc_data$sex, cc_data$strain))` or as many as `max(table(cc_data$sex, cc_data$strain))` of one sex. How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
+Most strains have `r modal(table(cc_data$sex, cc_data$strain))` mice of each sex, while some may have `r min(table(cc_data$sex, cc_data$strain))` or as many as `r max(table(cc_data$sex, cc_data$strain))` of one sex. How do the first few rows of data look? Note the NAs in the data. These are missing values and can complicate analyses unless specifically addressed. 
 
 ```{r}
 head(cc_data)
@@ -98,6 +98,20 @@ ggplot(data = cc_data, mapping = aes(x = strain, y = RBC)) +
 ```
 
 In a boxplot, the upper whisker extends to the highest value within 1.5 x inter-quartile range (IQR, or distance between first and third quartiles) and the lower whisker extends to the lowest value within 1.5 x IQR of the hinge. Data beyond the end of the whiskers (outliers) are plotted as points.
+
+You can view summary statistical information about a phenotype, such as the first quartile, median, or third quartile values by using `summary()`.
+
+```{r}
+summary(object = cc_data$RBC)
+```
+
+The median red blood cell count across all strains is `r median(cc_data$RBC, na.rm=TRUE)` and the mean value is `r mean(cc_data$RBC, na.rm=TRUE)`. If you wanted summary statistics for a specific strain, you could subset the data by specifying the strain name.
+
+```{r}
+summary(cc_data$RBC[cc_data$strain=="NOD/ShiLtJ"])
+```
+
+We'll look at subsetting data more in a bit. Back to plotting.
 
 It's difficult to distinguish the strain names on the x-axis, so flip the coordinates to place strain on the y-axis and red blood cells on the x-axis. 
 

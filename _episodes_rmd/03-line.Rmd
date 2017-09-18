@@ -26,15 +26,7 @@ knitr_fig_path("03-")
 Time series plots are valuable but can be tricky to create because date and time formats in computing are not straightforward. Here we'll recreate the plot showing growth in the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/) from 2008 to present.
 
 #### Load packages and libraries
-Load the ggplot and scales libraries. You'll need to install the packages
-first if you haven't done so already. Install them from the Packages tab,
-or use the install.packages() command. Use double quotes around the package
-name.
-```{r eval = FALSE}
-install.packages("ggplot2")
-install.packages("scales")
-```
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library in order to use the functions contained in the package.
+Load the ggplot and scales libraries in order to use the functions contained in the packages.
 ```{r}
 library(ggplot2)
 library(scales)

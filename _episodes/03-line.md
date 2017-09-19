@@ -23,17 +23,7 @@ source: Rmd
 Time series plots are valuable but can be tricky to create because date and time formats in computing are not straightforward. Here we'll recreate the plot showing growth in the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/) from 2008 to present.
 
 #### Load packages and libraries
-Load the ggplot and scales libraries. You'll need to install the packages
-first if you haven't done so already. Install them from the Packages tab,
-or use the install.packages() command. Use double quotes around the package
-name.
-
-~~~
-install.packages("ggplot2")
-install.packages("scales")
-~~~
-{: .r}
-You only need to install a package once to download it into your machine's library. Once you have installed the package on your machine, you need to load the library in order to use the functions contained in the package.
+Load the ggplot and scales libraries in order to use the functions contained in the packages.
 
 ~~~
 library(ggplot2)
@@ -213,7 +203,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" />
 
 Can you identify the ggplot syntax in the code above? Remember: ggplot(data, mapping) + layer(). The layer is a line.
 Now add a second layer, a line representing growth of open access bases. Use the up arrow on your keyboard to retrieve the last bit of code you wrote, and add onto that.
@@ -225,7 +215,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
 
 Change the line colors and sizes. Use the up arrow to retrieve the last code you ran, and add onto it rather than typing anew. More typing = more pain and suffering.
 
@@ -237,7 +227,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
 
 The plot seems to show zero bases until the year 2010. Check the smallest number of total bases and open access bases in the data. Are the minimum numbers of bases both zero?
 
@@ -278,7 +268,7 @@ max(sra$bases)
 
 
 ~~~
-[1] 1.319109e+16
+[1] 1.320742e+16
 ~~~
 {: .output}
 
@@ -292,7 +282,7 @@ max(sra$open_access_bases)
 
 
 ~~~
-[1] 5.428109e+15
+[1] 5.429272e+15
 ~~~
 {: .output}
 
@@ -307,7 +297,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
 #### Specify axis breaks and labels
 Now manually define the y axis breaks so that each order of magnitude is represented.
@@ -320,7 +310,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
 
 Supply simpler superscripted exponents on the y axis labels. These are easier to read and interpret than are combinations of digits, plus signs, and the letter e.
 
@@ -334,7 +324,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" style="display: block; margin: auto;" />
 
 Compare to the plot at the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/).
 Notice the difference in x and y axis labels and starting points. Our plot starts in the year 2000 with 2.03e+10 bases. The [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/) plot starts before the year 2009 with 10^12^ bases.
@@ -402,7 +392,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" style="display: block; margin: auto;" />
 
 Specify the breaks in the x-axis so that each year is shown. Redefine the variable
 logplot with these changes.
@@ -413,7 +403,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
 
 #### Add text annotations, axis labels, and title
 Add text annotations to the plot to label the lines for total and open access bases.
@@ -426,7 +416,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
 
 Add axis labels.
 
@@ -438,7 +428,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
 
 Add a title. Redefine logplot each time to save the changes.
 
@@ -449,7 +439,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" />
 
 #### Save the plot as a PDF file
 Save the plot as a PDF using the pdf() command. You can also save as a png(), jpeg(), tiff(), or bmp() using the corresponding command. Provide a file name inside the parentheses surrounded by double quotes. Be sure to turn the graphics device off afterward to return graphics output to your plot window in RStudio. Use dev.off() to turn off the graphics device.

@@ -20,156 +20,102 @@ keypoints:
 source: Rmd
 ---
 
-
+```{r, include=FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("03-")
+```
 
 ## Preliminaries
 Scatterplots are simple ways to visualize data. We can explore the relationship between data variables by scatterplotting one against the other and by adding regression lines to the plots. We'll use baseline survey data for the 8 inbred Collaborative Cross founder strains and 54 F1 hybrids for this purpose. Measurements include blood, cardiovascular, bone, body size, weight, and composition. For more information about this data set, see the [CGDpheno3 data](http://phenome.jax.org/db/q?rtn=projects/details&id=439) at Mouse Phenome Database.
 
 Load the ggplot library and the data.
 
-
-~~~
+```{r load, warning=FALSE}
 library(ggplot2)
 # try https:// if you get an error message when loading data from the URL.
 cc_data <- read.csv(file = "http://bit.ly/CGDPheno3")
-~~~
-{: .r}
+```
 
-Let's look at the structure of the data. *str()* provides the data type for the 642 rows and 55 columns in the cc_data founder strain data. Animals are in rows and measurements in columns.
+Let's look at the structure of the data. *str()* provides the data type for the `r nrow(cc_data)` rows and `r ncol(cc_data)` columns in the cc_data founder strain data. Animals are in rows and measurements in columns.
 
-
-~~~
+```{r eval=FALSE}
 str(cc_data)
-~~~
-{: .r}
+```
 
 How many animals of each strain?
 
-
-~~~
+```{r eval=FALSE}
 sort(table(cc_data$strain))
-~~~
-{: .r}
+```
 
 How many of each by sex?
 
-
-~~~
+```{r eval=FALSE}
 table(cc_data$strain, cc_data$sex)
-~~~
-{: .r}
+```
 
 ## A first scatterplot
 Use `ggplot()` to create a scatterplot of red blood cells on the x axis by percent reticulocytes on the y. The basic `ggplot()` syntax is: `ggplot(data, mapping) + layer()`. The geometric object, or layer, used to define a scatterplot is `geom_point()`.
 
-
-~~~
+```{r warning=FALSE}
 ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC)) +
   geom_point()
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
+```
 
 ## Linear regression
 `geom_smooth()` is the "geom" (geometric object) used to add a smoother or regression line to a scatterplot. The default smoother is `loess`, which uses a smooth local regression. Specify a linear model instead.
 
-
-~~~
+```{r warning=FALSE, message=FALSE}
 ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC)) +
   geom_point() +
   geom_smooth(method = "lm")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
+```
 
 There appears to be a negative correlation between red blood cells and percent reticulocytes (immmature red blood cells). By default `geom_smooth()` adds a 95% confidence interval around the regression line. To remove this, include the argument `se = FALSE` in the call to `geom_smooth()`. Notice that at the extreme values uncertainty in the model increases.
 
 What is the strength of the correlation between these two variables? Determine the correlation coefficient between the two. Add the argument `use = "complete.obs"` to ignore missing data values ("NAs").
 
-
-~~~
+```{r warning=FALSE}
 cor(x=cc_data$RBC, y=cc_data$pctRetic, use = "complete.obs")
-~~~
-{: .r}
-
-
-
-~~~
-[1] -0.3706628
-~~~
-{: .output}
+```
 
 As a rule of thumb, a Pearson correlation coefficient value between 0.3 and 0.5 (or -0.3 and -0.5) is considered weak, but shouldn't be overlooked.
 
 Let's explore other ways to find relationships between the data variables. You can map color to the sex of the animal with the mapping function `aes()`.
 
-
-~~~
+```{r warning=FALSE}
 ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC)) +
   geom_point(aes(color = sex))
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+```
 
 Notice that males have the most extreme values for percent reticulocytes. Now add a separate smoother for males and females. Do this by mapping color to sex in the initial call to `ggplot()`. If you map color to sex in the initial call to `ggplot()`, every layer that follows will inherit this mapping of color to sex. Notice that both the points and the regression lines are colored by sex.
 
-
-~~~
+```{r warning=FALSE, message=FALSE}
 ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC, color = sex)) +
   geom_point() +
   geom_smooth(method = "lm")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
+```
 
 It doesn't appear that there's a big sex difference in the relationship between red blood cells and percent reticulocytes. If so, you would expect to see regression lines with very different slopes. The negative correlation between reticulocytes and red blood cells persists. The vertical separation between the regression lines for male and female might indicate a difference in mean red blood cells between the sexes, however.
 
 If you want to know whether there's a significant difference in mean RBC values between the two sexes, you would perform a t-test.
 
-
-~~~
+```{r ttest}
 t.test(x = cc_data[cc_data$sex == "f", "RBC"], y = cc_data[cc_data$sex == "m", "RBC"])
-~~~
-{: .r}
-
-
-
-~~~
-
-	Welch Two Sample t-test
-
-data:  cc_data[cc_data$sex == "f", "RBC"] and cc_data[cc_data$sex == "m", "RBC"]
-t = -2.9463, df = 622.68, p-value = 0.003336
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -0.20936659 -0.04189601
-sample estimates:
-mean of x mean of y 
- 9.969035 10.094667 
-~~~
-{: .output}
+```
 
 Use facets to view males and females in separate panels.
 
-
-~~~
+```{r facet, warning=FALSE}
 ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC, color = sex)) +
   geom_point() +
   geom_smooth(method = "lm") + 
   facet_wrap(~ sex)
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-facet-1.png" title="plot of chunk facet" alt="plot of chunk facet" style="display: block; margin: auto;" />
+```
 
 Add a title and label the axes.
 
-
-~~~
+```{r title_labels, warning=FALSE}
 ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC, color = sex)) +
   geom_point() +
   geom_smooth(method = "lm") + 
@@ -177,10 +123,7 @@ ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC, color = sex)) +
   xlab("percent reticulocytes") +
   ylab("red blood cell count (n/uL)") +
   ggtitle("Red Blood Cell Count by Percent Reticulocytes")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-title_labels-1.png" title="plot of chunk title_labels" alt="plot of chunk title_labels" style="display: block; margin: auto;" />
+```
 
 
 > ## Challenge 1
@@ -207,95 +150,57 @@ ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC, color = sex)) +
 
 
 
-
-~~~
+```{r}
 ggplot(data = cc_data, mapping = aes(x=strain, y=RBC)) + geom_point()
-~~~
-{: .r}
-
-
-
-~~~
-Warning: Removed 16 rows containing missing values (geom_point).
-~~~
-{: .error}
-
-<img src="../fig/rmd-03-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
+```
 
 You should get a warning message about missing values. This lets you know that there are 16 missing values, and that they have been removed. 
 Now the data points are plotted. Color the data points by sex using a secondary mapping of color to sex within *geom_point*.
-
-~~~
+```{r warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x=strain, y=RBC)) +
   geom_point(mapping = aes(colour=sex))
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
+```
 
 Sort the strains by mean RBC values using the *reorder()* function, which takes a factor variable (strain) and a function (mean).
-
-~~~
+```{r warning=FALSE}
 ggplot(data = cc_data, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) +
   geom_point(mapping = aes(colour=sex))
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+```
 
 Strains are now sorted by mean red blood cell count. We'll continue building this plot layer by layer. It's already quite complicated so for simplicity, save the basic plot as a variable and add more layers. 
-
-~~~
+```{r warning=FALSE}
 rbc_plot <- ggplot(data = cc_data, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) +
   geom_point(mapping = aes(colour=sex))
-~~~
-{: .r}
+```
 
 To view the plot saved as a variable, type the variable name.
-
-~~~
+```{r warning=FALSE}
 rbc_plot
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" style="display: block; margin: auto;" />
+```
 
 Add the mean value by strain to the plot as a point using the *stat_summary* layer.
-
-~~~
+```{r warning=FALSE}
 rbc_plot + 
   stat_summary(fun.y="mean", geom="point", colour="mediumpurple4")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" style="display: block; margin: auto;" />
+```
 
 The x-axis is still illegible since the strain names run together. For scatterplots, it's easy to flip the axes, however, many geoms in ggplot don't treat the x and y axes equally. We can use *coord_flip()* in this scatterplot to place strains on the y axis and RBC on the x.
-
-~~~
+```{r warning=FALSE}
 rbc_plot + 
   stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") + 
   coord_flip()
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" style="display: block; margin: auto;" />
+```
 
 The strain labels are now on the y-axis, but they still over-run one another somewhat. Shrink them.
-
-~~~
+```{r warning=FALSE}
 rbc_plot + 
   stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") + 
   coord_flip() + 
   theme(axis.text.y = element_text(size=rel(0.7)))
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
+``` 
 
 Add a title and x- and y-axis labels.
-
-~~~
+```{r warning=FALSE}
 rbc_plot + 
   stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") + 
   coord_flip() + 
@@ -303,14 +208,10 @@ rbc_plot +
   ggtitle("Mean Red Blood Cells by Strain") + 
   xlab("strain") + 
   ylab("red blood cell count (n/uL)")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
+``` 
 
 Instead of viewing data points by sex on the same plot, we can facet by sex. Remove the *stat_summary* layer.
-
-~~~
+```{r warning=FALSE}
 rbc_plot + 
   coord_flip() + 
   theme(axis.text.y = element_text(size=rel(0.7))) +  
@@ -318,36 +219,26 @@ rbc_plot +
   xlab("strain") + 
   ylab("red blood cell count (n/uL)") +
   facet_grid(. ~ sex)
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
+```
 
 #### Subsetting data
 Subset the data to include strains with highest and lowest mean RBC and their progenitors or F1s.
 
-
-~~~
+```{r warning=FALSE}
 cc_subset <- subset(cc_data, 
                  strain %in% c("ACASTF1","A/J", "CAST/EiJ", "NOD/ShiLtJ", "NODCASTF1", "NODAF1", "APWKF1", "PWK/PhJ")==TRUE)
-~~~
-{: .r}
+```
 
 Plot the data subset.
-
-~~~
+```{r warning=FALSE}
 ggplot(data = cc_subset, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) + 
   geom_point(mapping = aes(colour=sex)) + 
   coord_flip() + 
   stat_summary(fun.y="mean", geom="point", colour="mediumpurple4")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" />
+```
 
 Add a title and axis labels.
-
-~~~
+```{r warning=FALSE}
 ggplot(data = cc_subset, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) + 
   geom_point(mapping = aes(colour=sex)) + 
   coord_flip() + 
@@ -355,10 +246,7 @@ ggplot(data = cc_subset, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=
   ggtitle("Mean Red Blood Cells by Strain") + 
   xlab("strain") + 
   ylab("red blood cell count (n/uL)")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" />
+```
 
 > Code Challenge: Choose two measurements from the cc_data to scatterplot with ggplot(). Choose from any of the following options:
 
@@ -373,8 +261,7 @@ ggplot(data = cc_subset, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=
 
 #### Bonus
 Gary Churchill supplied the following two functions to create a scatterplot matrix. You can choose any number of phenotypes to scatterplot against one another. Correlation values for each pair of phenotypes appear in the upper triangle, and histograms for each phenotype appear along the diagonal. These functions don't use ggplot, but produce gorgeous scatterplot matrices that help to view the relationship between variables and their distributions. Execute the following code by selecting all of it and clicking the Run button. The *pairs()* function at the end creates the plot. Choose any phenotypes from the cc_data and list them within the square brackets.
-
-~~~
+```{r warning=FALSE}
 panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...)
 {
     usr <- par("usr"); on.exit(par(usr))
@@ -398,7 +285,4 @@ panel.hist <- function(x, ...)
 
 pairs(cc_data[,c("LTM", "PLT", "WBC", "RBC")],
 	upper.panel = panel.cor, diag.panel = panel.hist)
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" style="display: block; margin: auto;" />
+```

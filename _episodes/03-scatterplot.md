@@ -204,172 +204,70 @@ ggplot(data=cc_data, mapping = aes(x = pctRetic, y = RBC, color = sex)) +
 > {: .solution}
 {: .challenge}  
 
+## View relationships between many variables with a matrix of scatterplots
 
+You might want to explore relationships between many variables in your data more generally in order to find interesting correlations. You can create a matrix, or grid, of scatterplots to do this. Use the `pairs()` function to create a scatterplot matrix.
 
-
-
-~~~
-ggplot(data = cc_data, mapping = aes(x=strain, y=RBC)) + geom_point()
-~~~
-{: .r}
-
+First find the variables that you would like to plot against one another. List the names of the variables.
 
 
 ~~~
-Warning: Removed 16 rows containing missing values (geom_point).
-~~~
-{: .error}
-
-<img src="../fig/rmd-03-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
-
-You should get a warning message about missing values. This lets you know that there are 16 missing values, and that they have been removed. 
-Now the data points are plotted. Color the data points by sex using a secondary mapping of color to sex within *geom_point*.
-
-~~~
-ggplot(data = cc_data, mapping = aes(x=strain, y=RBC)) +
-  geom_point(mapping = aes(colour=sex))
+names(cc_data)
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
-Sort the strains by mean RBC values using the *reorder()* function, which takes a factor variable (strain) and a function (mean).
 
 ~~~
-ggplot(data = cc_data, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) +
-  geom_point(mapping = aes(colour=sex))
+ [1] "strain"          "sex"             "id"             
+ [4] "mouse_num"       "CHOL"            "HDL"            
+ [7] "GLU"             "TG"              "WBC"            
+[10] "pctLYMP"         "pctNEUT"         "pctMONO"        
+[13] "pctBASO"         "pctEOS"          "pctLUC"         
+[16] "RBC"             "pctRetic"        "RDW"            
+[19] "MCH"             "MCHC"            "CHCM"           
+[22] "HDW"             "MCV"             "cHGB"           
+[25] "mHGB"            "HCT"             "PLT"            
+[28] "MPV"             "pulse"           "pulse_std"      
+[31] "systolic_BP"     "systolic_BP_std" "CV"             
+[34] "HR"              "HRV"             "R_amplitude"    
+[37] "RS_amplitude"    "N"               "PQ"             
+[40] "PR"              "QRS"             "QT"             
+[43] "QT_dispersion"   "QTc"             "QTc_dispersion" 
+[46] "RR"              "ST"              "BMC"            
+[49] "BMD"             "bone_area"       "total_area"     
+[52] "LTM"             "pct_fat"         "TTM"            
+[55] "bw"             
 ~~~
-{: .r}
+{: .output}
 
-<img src="../fig/rmd-03-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+You can refer to variables by the column number or by name. Here are a few examples.
 
-Strains are now sorted by mean red blood cell count. We'll continue building this plot layer by layer. It's already quite complicated so for simplicity, save the basic plot as a variable and add more layers. 
-
-~~~
-rbc_plot <- ggplot(data = cc_data, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) +
-  geom_point(mapping = aes(colour=sex))
-~~~
-{: .r}
-
-To view the plot saved as a variable, type the variable name.
 
 ~~~
-rbc_plot
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" style="display: block; margin: auto;" />
-
-Add the mean value by strain to the plot as a point using the *stat_summary* layer.
-
-~~~
-rbc_plot + 
-  stat_summary(fun.y="mean", geom="point", colour="mediumpurple4")
+# specify columns 5-8
+pairs(cc_data[,5:8])
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" style="display: block; margin: auto;" />
-
-The x-axis is still illegible since the strain names run together. For scatterplots, it's easy to flip the axes, however, many geoms in ggplot don't treat the x and y axes equally. We can use *coord_flip()* in this scatterplot to place strains on the y axis and RBC on the x.
+<img src="../fig/rmd-03-pairs-1.png" title="plot of chunk pairs" alt="plot of chunk pairs" style="display: block; margin: auto;" />
 
 ~~~
-rbc_plot + 
-  stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") + 
-  coord_flip()
+# specify columns by name
+pairs(cc_data[,c("LTM", "PLT", "WBC", "RBC")])
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" style="display: block; margin: auto;" />
-
-The strain labels are now on the y-axis, but they still over-run one another somewhat. Shrink them.
+<img src="../fig/rmd-03-pairs-2.png" title="plot of chunk pairs" alt="plot of chunk pairs" style="display: block; margin: auto;" />
 
 ~~~
-rbc_plot + 
-  stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") + 
-  coord_flip() + 
-  theme(axis.text.y = element_text(size=rel(0.7)))
+# specify columns by column index number
+pairs(cc_data[,c(5, 8, 14, 15)])
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-pairs-3.png" title="plot of chunk pairs" alt="plot of chunk pairs" style="display: block; margin: auto;" />
 
-Add a title and x- and y-axis labels.
-
-~~~
-rbc_plot + 
-  stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") + 
-  coord_flip() + 
-  theme(axis.text.y = element_text(size=rel(0.7))) +
-  ggtitle("Mean Red Blood Cells by Strain") + 
-  xlab("strain") + 
-  ylab("red blood cell count (n/uL)")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
-
-Instead of viewing data points by sex on the same plot, we can facet by sex. Remove the *stat_summary* layer.
-
-~~~
-rbc_plot + 
-  coord_flip() + 
-  theme(axis.text.y = element_text(size=rel(0.7))) +  
-  ggtitle("Mean Red Blood Cells by Strain") + 
-  xlab("strain") + 
-  ylab("red blood cell count (n/uL)") +
-  facet_grid(. ~ sex)
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
-
-#### Subsetting data
-Subset the data to include strains with highest and lowest mean RBC and their progenitors or F1s.
-
-
-~~~
-cc_subset <- subset(cc_data, 
-                 strain %in% c("ACASTF1","A/J", "CAST/EiJ", "NOD/ShiLtJ", "NODCASTF1", "NODAF1", "APWKF1", "PWK/PhJ")==TRUE)
-~~~
-{: .r}
-
-Plot the data subset.
-
-~~~
-ggplot(data = cc_subset, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) + 
-  geom_point(mapping = aes(colour=sex)) + 
-  coord_flip() + 
-  stat_summary(fun.y="mean", geom="point", colour="mediumpurple4")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" />
-
-Add a title and axis labels.
-
-~~~
-ggplot(data = cc_subset, mapping = aes(x=reorder(strain, RBC, FUN="mean", na.rm=TRUE), y=RBC)) + 
-  geom_point(mapping = aes(colour=sex)) + 
-  coord_flip() + 
-  stat_summary(fun.y="mean", geom="point", colour="mediumpurple4") +
-  ggtitle("Mean Red Blood Cells by Strain") + 
-  xlab("strain") + 
-  ylab("red blood cell count (n/uL)")
-~~~
-{: .r}
-
-<img src="../fig/rmd-03-unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" />
-
-> Code Challenge: Choose two measurements from the cc_data to scatterplot with ggplot(). Choose from any of the following options:
-
-- color points by sex
-- reorder by mean, median, or standard deviation
-- save the plot as a variable
-- add a statistical summary (mean, median, sd)
-- flip the x- and y-axes
-- add a title and axis labels
-- facet by sex
-- subset the data and plot the subset
 
 #### Bonus
 Gary Churchill supplied the following two functions to create a scatterplot matrix. You can choose any number of phenotypes to scatterplot against one another. Correlation values for each pair of phenotypes appear in the upper triangle, and histograms for each phenotype appear along the diagonal. These functions don't use ggplot, but produce gorgeous scatterplot matrices that help to view the relationship between variables and their distributions. Execute the following code by selecting all of it and clicking the Run button. The *pairs()* function at the end creates the plot. Choose any phenotypes from the cc_data and list them within the square brackets.
@@ -401,4 +299,4 @@ pairs(cc_data[,c("LTM", "PLT", "WBC", "RBC")],
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />

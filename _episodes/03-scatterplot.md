@@ -241,7 +241,7 @@ names(cc_data)
 ~~~
 {: .output}
 
-You can refer to variables by the column number or by name. Here are a few examples.
+You can refer to variables by the column number or by name. Here are a few examples using the `pairs()` function, which is not part of the ggplot2 package.
 
 
 ~~~
@@ -268,35 +268,43 @@ pairs(cc_data[,c(5, 8, 14, 15)])
 
 <img src="../fig/rmd-03-pairs-3.png" title="plot of chunk pairs" alt="plot of chunk pairs" style="display: block; margin: auto;" />
 
+To further explore correlations between data variables, copy and paste the `panel.cor` and `panel.hist` functions into the Console.
 
-#### Bonus
-Gary Churchill supplied the following two functions to create a scatterplot matrix. You can choose any number of phenotypes to scatterplot against one another. Correlation values for each pair of phenotypes appear in the upper triangle, and histograms for each phenotype appear along the diagonal. These functions don't use ggplot, but produce gorgeous scatterplot matrices that help to view the relationship between variables and their distributions. Execute the following code by selecting all of it and clicking the Run button. The *pairs()* function at the end creates the plot. Choose any phenotypes from the cc_data and list them within the square brackets.
 
 ~~~
-panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...)
+## put (absolute) correlations on the upper panels,
+## with size proportional to the correlations.
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
 {
     usr <- par("usr"); on.exit(par(usr))
     par(usr = c(0, 1, 0, 1))
-    r <- cor(x, y, use="complete.obs")
-    txt <- format(c(r, 0.123456789), digits=digits)[1]
-    txt <- paste(prefix, txt, sep="")
+    r <- abs(cor(x, y, use = "complete.obs"))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
     if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
-    text(0.5, 0.5, txt, cex = cex.cor*0.5, col=c("gray60", "black")[(abs(r)>0.65)+1])
+    text(0.5, 0.5, txt, cex = cex.cor * r)
 }
 
+## put histograms on the diagonal
 panel.hist <- function(x, ...)
 {
     usr <- par("usr"); on.exit(par(usr))
-    par(usr = c(usr[1:2],0,1.5) )
+    par(usr = c(usr[1:2], 0, 1.5) )
     h <- hist(x, plot = FALSE)
     breaks <- h$breaks; nB <- length(breaks)
     y <- h$counts; y <- y/max(y)
-    rect(breaks[-nB], 0, breaks[-1], y, col="cyan", ...)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
 }
+~~~
+{: .r}
 
-pairs(cc_data[,c("LTM", "PLT", "WBC", "RBC")],
+Now that you've defined the panel functions, use them with `pairs()` to create a scatterplot matrix with histograms on the diagonal and absolute correlation values in the upper panel.
+
+
+~~~
+pairs(cc_data[,5:8],
 	upper.panel = panel.cor, diag.panel = panel.hist)
 ~~~
 {: .r}
 
-<img src="../fig/rmd-03-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
+<img src="../fig/rmd-03-panel_example-1.png" title="plot of chunk panel_example" alt="plot of chunk panel_example" style="display: block; margin: auto;" />

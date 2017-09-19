@@ -308,3 +308,14 @@ pairs(cc_data[,5:8],
 {: .r}
 
 <img src="../fig/rmd-03-panel_example-1.png" title="plot of chunk panel_example" alt="plot of chunk panel_example" style="display: block; margin: auto;" />
+
+> ## Challenge 2
+> 
+> 1. Choose a set of measurements from cc_data to scatterplot with `pairs()`.
+> 2. Use `panel.cor` and `panel.hist` to create correlation values and histograms in the scatterplot matrix.
+>
+> > ## Solution to Challenge 
+> > 1. 
+> > 2.
+> {: .solution}
+{: .challenge}  

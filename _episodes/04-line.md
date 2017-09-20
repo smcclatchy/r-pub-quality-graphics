@@ -268,7 +268,7 @@ max(sra$bases)
 
 
 ~~~
-[1] 1.322486e+16
+[1] 1.322856e+16
 ~~~
 {: .output}
 
@@ -282,12 +282,12 @@ max(sra$open_access_bases)
 
 
 ~~~
-[1] 5.444447e+15
+[1] 5.447871e+15
 ~~~
 {: .output}
 
 #### Log-transform the y-axis
-The smallest number of bases is 2.03e+10, and the largest number is 1.32e+16. The smallest number of open access bases is 2.03e+10, and the largest number is 5.44e+15. We need to transform the y axis to logarithmic for accurate display, so that the plot doesn't show values of zero that don't exist.
+The smallest number of bases is 2.03e+10, and the largest number is 1.32e+16. The smallest number of open access bases is 2.03e+10, and the largest number is 5.45e+15. We need to transform the y axis to logarithmic for accurate display, so that the plot doesn't show values of zero that don't exist.
 
 ~~~
 ggplot(data = sra, mapping = aes(x = date)) + 
@@ -346,12 +346,12 @@ table(format(sra$date, "%Y"))
 ~~~
 {: .output}
 
-Remove the single measurements in years 2000 and 2007. These two data points extend 
-the line backward in time and give misleading information about the actual growth in the number of bases by making it appear as if data collection was sequential year-over-year. In fact, there were many years missing data altogether. Start at year 2008, the first year of sustained,  consecutive data collection.
+Remove the single measurement in year 2007. This data point extend 
+the line backward in time and give misleading information about the actual growth in the number of bases by making it appear as if data collection was consistent year-over-year. Start at year 2008, the first year of sustained data collection.
 
 
 ~~~
-which(format(sra$date, "%Y") %in% c("2000", "2007"))
+which(format(sra$date, "%Y") %in% c("2007"))
 ~~~
 {: .r}
 
@@ -365,7 +365,7 @@ which(format(sra$date, "%Y") %in% c("2000", "2007"))
 
 
 ~~~
-sra <- sra[-(1:2),]
+sra <- sra[-1,]
 table(format(sra$date, "%Y"))
 ~~~
 {: .r}
@@ -375,11 +375,11 @@ table(format(sra$date, "%Y"))
 ~~~
 
 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
- 148  271  332  340  364  363  365  365  366  260 
+ 149  271  332  340  364  363  365  365  366  260 
 ~~~
 {: .output}
 
-Save the plot to a variable now that we've removed the two data points. To view the plot, type the name of the variable.
+Save the plot to a variable now that we've removed the 2007 data point. To view the plot, type the name of the variable.
 
 ~~~
 logplot <- ggplot(data = sra, mapping = aes(x = date)) +
@@ -451,7 +451,20 @@ dev.off()
 ~~~
 {: .r}
 
-Now locate the file on your machine and open it. Compare with the plot at the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/).
+Now locate the file on your machine and open it. Compare with the plot at the [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/Traces/sra/).
 
-> Code Challenge: Plot bytes and open access bytes. Change to log scale. Color the lines, add text annotations, label the axes and add a title. Save the plot to a variable. Print the variable to a file and open the file to view your plot. 
+> ## Challenge 1
+>
+> 1. Plot bytes and open access bytes.
+> 2. Change to log scale.
+> 3. Color the lines.
+> 4. Add text annotations. 
+> 5. Add axis labels and a plot title
+> 6. Save the plot to a variable, print the variable to a pdf, png, or other file, and open the file to view your plot.
+>
+> > ## Solution to Challenge 1
+> > 1. 
+
+> {: .solution}
+{: .challenge}  
 

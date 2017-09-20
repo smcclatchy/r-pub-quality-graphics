@@ -136,16 +136,16 @@ How many data points are there in each year?
 table(format(sra$date, "%Y"))
 ```
 
-Remove the single measurements in years 2000 and 2007. These two data points extend 
-the line backward in time and give misleading information about the actual growth in the number of bases by making it appear as if data collection was sequential year-over-year. In fact, there were many years missing data altogether. Start at year 2008, the first year of sustained,  consecutive data collection.
+Remove the single measurement in year 2007. This data point extend 
+the line backward in time and give misleading information about the actual growth in the number of bases by making it appear as if data collection was consistent year-over-year. Start at year 2008, the first year of sustained data collection.
 
 ```{r}
-which(format(sra$date, "%Y") %in% c("2000", "2007"))
-sra <- sra[-(1:2),]
+which(format(sra$date, "%Y") %in% c("2007"))
+sra <- sra[-1,]
 table(format(sra$date, "%Y"))
 ```
 
-Save the plot to a variable now that we've removed the two data points. To view the plot, type the name of the variable.
+Save the plot to a variable now that we've removed the 2007 data point. To view the plot, type the name of the variable.
 ```{r}
 logplot <- ggplot(data = sra, mapping = aes(x = date)) +
   geom_line(aes(y = bases), colour = "blue", size = 1.5) + 
@@ -196,7 +196,20 @@ print(logplot)
 dev.off()
 ```
 
-Now locate the file on your machine and open it. Compare with the plot at the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/).
+Now locate the file on your machine and open it. Compare with the plot at the [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/Traces/sra/).
 
-> Code Challenge: Plot bytes and open access bytes. Change to log scale. Color the lines, add text annotations, label the axes and add a title. Save the plot to a variable. Print the variable to a file and open the file to view your plot. 
+> ## Challenge 1
+>
+> 1. Plot bytes and open access bytes.
+> 2. Change to log scale.
+> 3. Color the lines.
+> 4. Add text annotations. 
+> 5. Add axis labels and a plot title
+> 6. Save the plot to a variable, print the variable to a pdf, png, or other file, and open the file to view your plot.
+>
+> > ## Solution to Challenge 1
+> > 1. 
+
+> {: .solution}
+{: .challenge}  
 

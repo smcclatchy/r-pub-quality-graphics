@@ -3,7 +3,7 @@
 #------------------------------------------------------------
 
 # Which carpentry is this ("swc", "dc", or "lc")?
-carpentry: "cc"
+carpentry: "dc"
 
 # Overall title for pages.
 title: "Publication Quality Graphics with R"

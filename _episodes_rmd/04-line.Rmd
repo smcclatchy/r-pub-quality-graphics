@@ -190,7 +190,7 @@ logplot
 
 #### Save the plot as a PDF file
 Save the plot as a PDF using the pdf() command. You can also save as a png(), jpeg(), tiff(), or bmp() using the corresponding command. Provide a file name inside the parentheses surrounded by double quotes. Be sure to turn the graphics device off afterward to return graphics output to your plot window in RStudio. Use dev.off() to turn off the graphics device.
-```{r}
+```{r output_pdf, eval=FALSE}
 pdf(file = "SRA-database-growth.pdf")
 print(logplot)
 dev.off()

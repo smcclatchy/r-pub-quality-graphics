@@ -549,14 +549,6 @@ dev.off()
 ~~~
 {: .r}
 
-
-
-~~~
-quartz_off_screen 
-                2 
-~~~
-{: .output}
-
 > ## Challenge 3
 >
 > 1. Choose another phenotype or subset of strains to create boxplots by strain.
@@ -583,14 +575,6 @@ quartz_off_screen
 > > dev.off()
 > > ~~~
 > > {: .r}
-> > 
-> > 
-> > 
-> > ~~~
-> > quartz_off_screen 
-> >                 2 
-> > ~~~
-> > {: .output}
 > >
 > {: .solution}
 {: .challenge}  

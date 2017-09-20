@@ -340,7 +340,7 @@ subset_boxplot
 
 Output the plot to a PDF file. Set width and height. Turn off the output to pdf with the `dev.off()` command.
 
-```{r output_pdf, warning=FALSE}
+```{r output_pdf, eval=FALSE}
 pdf("subset-boxplot.pdf", width= 8, height = 9)
 print(subset_boxplot)
 dev.off()
@@ -365,7 +365,7 @@ dev.off()
 > > 6. `subset_boxplot <- subset_boxplot + xlab("strain") + ylab("percent neutrophils") + ggtitle("Percent Neutrophils by Strain")`
 > > 7.
 > > 
-> > ```{r challenge3, warning=FALSE} 
+> > ```{r challenge3, eval=FALSE} 
 > > png("subset-boxplot.png", width=10, height = 10)
 > > print(subset_boxplot)
 > > dev.off()

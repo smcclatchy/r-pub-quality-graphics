@@ -22,7 +22,7 @@ source: Rmd
 ## Preliminaries
 Time series plots are valuable but can be tricky to create because date and time formats in computing are not straightforward. Here we'll recreate the plot showing growth in the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/) from 2008 to present.
 
-#### Load packages and libraries
+## Load packages and libraries
 Load the ggplot and scales libraries in order to use the functions contained in the packages.
 
 ~~~
@@ -30,38 +30,8 @@ library(ggplot2)
 library(scales)
 ~~~
 {: .r}
-When you load a library you'll get a warning message indicating the R version in which the library was built. If it's different from the R version that you're running, you might occasionally run into problems depending on the library and the functions it contains. To find out what version of R you have, type
 
-
-~~~
-version
-~~~
-{: .r}
-
-
-
-~~~
-               _                           
-platform       x86_64-apple-darwin15.6.0   
-arch           x86_64                      
-os             darwin15.6.0                
-system         x86_64, darwin15.6.0        
-status                                     
-major          3                           
-minor          4.1                         
-year           2017                        
-month          06                          
-day            30                          
-svn rev        72865                       
-language       R                           
-version.string R version 3.4.1 (2017-06-30)
-nickname       Single Candle               
-~~~
-{: .output}
-
-The version of R is given as version.string, followed by the nickname for the version.
-
-#### Load data and explore
+## Load data and explore
 Read in the [Sequence Read Archive](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?) database growth file  and view structure.
 
 
@@ -74,8 +44,8 @@ str(sra)
 
 
 ~~~
-'data.frame':	3176 obs. of  5 variables:
- $ date             : Factor w/ 3176 levels "01/01/2011","01/01/2012",..: 1338 790 798 833 887 906 914 923 942 961 ...
+'data.frame':	3177 obs. of  5 variables:
+ $ date             : Factor w/ 3177 levels "01/01/2011","01/01/2012",..: 1338 790 798 833 887 906 914 923 942 961 ...
  $ bases            : num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
  $ open_access_bases: num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
  $ bytes            : num  5.05e+10 9.86e+10 1.03e+11 1.04e+11 1.04e+11 ...
@@ -83,7 +53,7 @@ str(sra)
 ~~~
 {: .output}
 
-The data have 3176 rows and 5 columns. The first column is listed as a factor when in fact it is a date in the MM/DD/YYYY format. A factor is a categorical variable (i.e. red, green, blue, or low, middle, and high-income). Date variables are a data type that includes month, day and year, and that have their own specific functions to extract weekdays or count the number of days until an event, for example. To place dates on the x-axis in proper order, convert the first column to a date object in the YYYY-MM-DD format. First check to make sure that the first several dates will be converted correctly.
+The data have 3177 rows and 5 columns. The first column is listed as a factor when in fact it is a date in the MM/DD/YYYY format. A factor is a categorical variable (i.e. red, green, blue, or low, middle, and high-income). Date variables are a data type that includes month, day and year, and that have their own specific functions to extract weekdays or count the number of days until an event, for example. To place dates on the x-axis in proper order, convert the first column to a date object in the YYYY-MM-DD format. First check to make sure that the first several dates will be converted correctly.
 
 
 ~~~
@@ -123,7 +93,7 @@ head(sra$date)
 
 ~~~
 [1] 06/05/2007 04/04/2008 04/05/2008 04/09/2008 04/15/2008 04/17/2008
-3176 Levels: 01/01/2011 01/01/2012 01/01/2013 01/01/2014 ... 12/31/2016
+3177 Levels: 01/01/2011 01/01/2012 01/01/2013 01/01/2014 ... 12/31/2016
 ~~~
 {: .output}
 
@@ -184,7 +154,7 @@ str(sra)
 
 
 ~~~
-'data.frame':	3176 obs. of  5 variables:
+'data.frame':	3177 obs. of  5 variables:
  $ date             : Date, format: "2007-06-05" "2008-04-04" ...
  $ bases            : num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
  $ open_access_bases: num  2.03e+10 3.98e+10 4.14e+10 4.18e+10 4.19e+10 ...
@@ -203,7 +173,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-plot_bases-1.png" title="plot of chunk plot_bases" alt="plot of chunk plot_bases" style="display: block; margin: auto;" />
 
 Can you identify the ggplot syntax in the code above? Remember: ggplot(data, mapping) + layer(). The layer is a line.
 Now add a second layer, a line representing growth of open access bases. Use the up arrow on your keyboard to retrieve the last bit of code you wrote, and add onto that.
@@ -215,7 +185,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-plot_oa_bases-1.png" title="plot of chunk plot_oa_bases" alt="plot of chunk plot_oa_bases" style="display: block; margin: auto;" />
 
 Change the line colors and sizes. Use the up arrow to retrieve the last code you ran, and add onto it rather than typing anew. More typing = more pain and suffering.
 
@@ -227,7 +197,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-plot_line_aesthetics-1.png" title="plot of chunk plot_line_aesthetics" alt="plot of chunk plot_line_aesthetics" style="display: block; margin: auto;" />
 
 The plot seems to show zero bases until the year 2010. Check the smallest number of total bases and open access bases in the data. Are the minimum numbers of bases both zero?
 
@@ -268,7 +238,7 @@ max(sra$bases)
 
 
 ~~~
-[1] 1.322856e+16
+[1] 1.325317e+16
 ~~~
 {: .output}
 
@@ -282,12 +252,12 @@ max(sra$open_access_bases)
 
 
 ~~~
-[1] 5.447871e+15
+[1] 5.457445e+15
 ~~~
 {: .output}
 
 #### Log-transform the y-axis
-The smallest number of bases is 2.03e+10, and the largest number is 1.32e+16. The smallest number of open access bases is 2.03e+10, and the largest number is 5.45e+15. We need to transform the y axis to logarithmic for accurate display, so that the plot doesn't show values of zero that don't exist.
+The smallest number of bases is 2.03e+10, and the largest number is 1.33e+16. The smallest number of open access bases is 2.03e+10, and the largest number is 5.46e+15. We need to transform the y axis to logarithmic for accurate display, so that the plot doesn't show values of zero that don't exist.
 
 ~~~
 ggplot(data = sra, mapping = aes(x = date)) + 
@@ -297,7 +267,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-plot_log_scale-1.png" title="plot of chunk plot_log_scale" alt="plot of chunk plot_log_scale" style="display: block; margin: auto;" />
 
 #### Specify axis breaks and labels
 Now manually define the y axis breaks so that each order of magnitude is represented.
@@ -310,7 +280,7 @@ ggplot(data = sra, mapping = aes(x = date)) +
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-y_breaks-1.png" title="plot of chunk y_breaks" alt="plot of chunk y_breaks" style="display: block; margin: auto;" />
 
 Supply simpler superscripted exponents on the y axis labels. These are easier to read and interpret than are combinations of digits, plus signs, and the letter e.
 
@@ -318,13 +288,13 @@ Supply simpler superscripted exponents on the y axis labels. These are easier to
 ggplot(data = sra, mapping = aes(x = date)) + 
   geom_line(aes(y = bases), colour = "blue", size = 1.5) + 
   geom_line(aes(y = open_access_bases), colour = "yellow", size = 1.5) +
-  scale_y_log10(breaks=c(1e+10, 1e+11, 1e+12, 1e+13, 1e+14, 1e+15),
-                labels = expression("10"^"10", "10"^"11", "10"^"12",
-                                    "10"^"13", "10"^"14", "10"^"15"))
+  scale_y_log10(breaks=c(1e+11, 1e+12, 1e+13, 1e+14, 1e+15, 1e+16),
+                labels = expression("10"^"11", "10"^"12",
+                                    "10"^"13", "10"^"14", "10"^"15", "10"^"16"))
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-y_labels-1.png" title="plot of chunk y_labels" alt="plot of chunk y_labels" style="display: block; margin: auto;" />
 
 Compare to the plot at the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/).
 Notice the difference in x and y axis labels and starting points. Our plot starts in the year 2000 with 2.03e+10 bases. The [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/Traces/sra/) plot starts before the year 2009 with 10^12^ bases.
@@ -342,7 +312,7 @@ table(format(sra$date, "%Y"))
 ~~~
 
 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
-   1  149  271  332  340  364  363  365  365  366  260 
+   1  149  271  332  340  364  363  365  365  366  261 
 ~~~
 {: .output}
 
@@ -375,7 +345,7 @@ table(format(sra$date, "%Y"))
 ~~~
 
 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
- 149  271  332  340  364  363  365  365  366  260 
+ 149  271  332  340  364  363  365  365  366  261 
 ~~~
 {: .output}
 
@@ -392,7 +362,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-plot_variable-1.png" title="plot of chunk plot_variable" alt="plot of chunk plot_variable" style="display: block; margin: auto;" />
 
 Specify the breaks in the x-axis so that each year is shown. Redefine the variable
 logplot with these changes.
@@ -403,7 +373,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-add_x_breaks-1.png" title="plot of chunk add_x_breaks" alt="plot of chunk add_x_breaks" style="display: block; margin: auto;" />
 
 #### Add text annotations, axis labels, and title
 Add text annotations to the plot to label the lines for total and open access bases.
@@ -416,7 +386,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-annotation-1.png" title="plot of chunk annotation" alt="plot of chunk annotation" style="display: block; margin: auto;" />
 
 Add axis labels.
 
@@ -428,7 +398,7 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-axis_labels-1.png" title="plot of chunk axis_labels" alt="plot of chunk axis_labels" style="display: block; margin: auto;" />
 
 Add a title. Redefine logplot each time to save the changes.
 
@@ -439,10 +409,10 @@ logplot
 ~~~
 {: .r}
 
-<img src="../fig/rmd-04-unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" />
+<img src="../fig/rmd-04-title-1.png" title="plot of chunk title" alt="plot of chunk title" style="display: block; margin: auto;" />
 
 #### Save the plot as a PDF file
-Save the plot as a PDF using the pdf() command. You can also save as a png(), jpeg(), tiff(), or bmp() using the corresponding command. Provide a file name inside the parentheses surrounded by double quotes. Be sure to turn the graphics device off afterward to return graphics output to your plot window in RStudio. Use dev.off() to turn off the graphics device.
+Save the plot as a PDF using the `pdf()` command, or by using the Export button in the Plots tab. You can also save as a png(), jpeg(), tiff(), or bmp() using the corresponding command. If you choose to save as a file by running a command in the Console, provide a file name inside the parentheses surrounded by double quotes. Be sure to turn the graphics device off afterward to return graphics output to your plot window in RStudio. Use dev.off() to turn off the graphics device.
 
 ~~~
 pdf(file = "SRA-database-growth.pdf")
@@ -464,7 +434,7 @@ Now locate the file on your machine and open it. Compare with the plot at the [S
 >
 > > ## Solution to Challenge 1
 > > 1. 
-
+> >
 > {: .solution}
 {: .challenge}  
 
